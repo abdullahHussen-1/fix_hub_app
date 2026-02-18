@@ -4,5 +4,8 @@ import 'package:flutter/material.dart';
 class AppThem {
   static final ThemeData themeData = ThemeData(
     scaffoldBackgroundColor: AppColors.primaryBackgroundWhite,
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: AppColors.primaryBackgroundBlue,
+    ),
   );
 }

@@ -14,19 +14,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'FIX HUB',
-      theme: AppThem.themeData,
-      initialRoute: AppRoute.splashScreen,
-      routes: {
-        AppRoute.splashScreen: (context) => SplashScreen(),
-        AppRoute.userTypeScreen: (context) => UserTypeScreen(),
-        AppRoute.loginScreen: (context) => LoginScreen(),
-        AppRoute.registerScreen: (context) => RegisterScreen(),
-        AppRoute.forgotPasswordScreen: (context) => ForgotPasswordScreen(),
-        AppRoute.homeScreen: (context) => HomeScreen(),
-      },
+    return SafeArea(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'FIX HUB',
+        theme: AppThem.themeData,
+        initialRoute: AppRoute.splashScreen,
+        routes: {
+          AppRoute.splashScreen: (context) => SplashScreen(),
+          AppRoute.userTypeScreen: (context) => UserTypeScreen(),
+          AppRoute.loginScreen: (context) => LoginScreen(),
+          AppRoute.registerScreen: (context) => RegisterScreen(),
+          AppRoute.forgotPasswordScreen: (context) => ForgotPasswordScreen(),
+          AppRoute.homeScreen: (context) => HomeScreen(),
+        },
+      ),
     );
   }
 }
