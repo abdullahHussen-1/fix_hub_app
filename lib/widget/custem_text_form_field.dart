@@ -2,19 +2,17 @@ import 'package:fix_hub/utils/app_colors.dart';
 import 'package:fix_hub/utils/app_style.dart';
 import 'package:flutter/material.dart';
 
-typedef validator = String? Function(String?)?;
-
-class CustemTextFormField extends StatelessWidget {
+// ignore: must_be_immutable
+class CustemTextFormField extends StatefulWidget {
   Color borderSideColor;
   String text;
   TextStyle hintStyleText;
   TextStyle? styleText;
   Widget? prefixIcon;
   Widget? suffixIcon;
-  validator validatorfancetion;
   TextInputType? keyboardType;
   bool obscureText;
-  TextEditingController? controller;
+  final TextEditingController controller;
   int maxLines;
   Function(String)? onChange;
 
@@ -25,39 +23,70 @@ class CustemTextFormField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.styleText,
-    this.validatorfancetion,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
-    this.controller,
+    required this.controller,
     this.maxLines = 1,
     this.onChange,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      controller: controller,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        enabledBorder: outlineInputBorderItem(colorBorder: borderSideColor),
-        focusedBorder: outlineInputBorderItem(colorBorder: borderSideColor),
+  State<CustemTextFormField> createState() => _CustemTextFormFieldState();
+}
 
-        errorBorder: outlineInputBorderItem(colorBorder: AppColors.redColor),
-        focusedErrorBorder: outlineInputBorderItem(
-          colorBorder: AppColors.redColor,
+class _CustemTextFormFieldState extends State<CustemTextFormField> {
+  late bool _obscureText;
+  @override
+  void initState() {
+    _obscureText = widget.obscureText;
+    super.initState();
+  }
+
+  void _togglePassword() {
+    _obscureText = !_obscureText;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 70,
+      child: TextFormField(
+        cursorHeight: 15,
+        keyboardType: widget.keyboardType,
+        obscureText: widget.obscureText,
+        controller: widget.controller,
+        maxLines: widget.maxLines,
+        decoration: InputDecoration(
+          enabledBorder:
+              outlineInputBorderItem(colorBorder: widget.borderSideColor),
+          focusedBorder:
+              outlineInputBorderItem(colorBorder: widget.borderSideColor),
+          errorBorder: outlineInputBorderItem(colorBorder: AppColors.redColor),
+          focusedErrorBorder: outlineInputBorderItem(
+            colorBorder: AppColors.redColor,
+          ),
+          errorStyle: AppStyle.error16red,
+          errorMaxLines: 2,
+          hintText: widget.text,
+          hintStyle: widget.hintStyleText,
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: widget.obscureText
+              ? GestureDetector(
+                  onTap: () {
+                    _togglePassword();
+                  },
+                  child: widget.suffixIcon)
+              : null,
         ),
-        errorStyle: AppStyle.error16red,
-        errorMaxLines: 2,
-        hintText: text,
-        hintStyle: hintStyleText,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
+        style: widget.styleText,
+        validator: (v) {
+          if (v == null || v.isEmpty) {
+            return "please fill${widget.text}";
+          }
+         return null;
+        },
+        onChanged: widget.onChange,
       ),
-      style: styleText,
-      validator: validatorfancetion,
-      onChanged: onChange,
     );
   }
 

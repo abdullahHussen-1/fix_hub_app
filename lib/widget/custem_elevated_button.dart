@@ -3,6 +3,7 @@ import 'package:fix_hub/utils/app_media_query.dart';
 import 'package:fix_hub/utils/app_style.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CustemElevatedButton extends StatelessWidget {
   final VoidCallback? onPressed;
   String text;
@@ -10,9 +11,8 @@ class CustemElevatedButton extends StatelessWidget {
   double? widthContainer;
   double? heightContainer;
   bool checkIcon;
-
   Widget? child;
-
+  // ignore: use_key_in_widget_constructors
   CustemElevatedButton({
     this.onPressed,
     required this.text,
@@ -26,7 +26,7 @@ class CustemElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 20,
+      width: 100,
       child: checkIcon
           ? InkWell(
               onTap: onPressed,
@@ -56,7 +56,7 @@ class CustemElevatedButton extends StatelessWidget {
                   vertical: AppMediaQuery.sizeHeight(context) * 0.02,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(16),
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
 

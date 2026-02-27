@@ -21,7 +21,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
     return Scaffold(
       //backgroundColor: Colors.black,
       body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(
+        padding: EdgeInsets.symmetric(
           horizontal: AppMediaQuery.sizeWidth(context) * 0.02,
           vertical: AppMediaQuery.sizeHeight(context) * 0.02,
         ),
@@ -30,14 +30,14 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
           children: [
             Image.asset(AppAssets.logoIsWhite),
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: AppMediaQuery.sizeWidth(context) * 0.04,
               ),
-              child: Text("User:", style: AppStyle.bold16blackTest),
+              child: Text("Select Role:", style: AppStyle.bold16blackTest),
             ),
             SizedBox(height: AppMediaQuery.sizeHeight(context) * 0.02),
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: AppMediaQuery.sizeWidth(context) * 0.1,
               ),
               child: DropdownButtonFormField<String>(
