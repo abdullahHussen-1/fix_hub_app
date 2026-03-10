@@ -1,10 +1,9 @@
-import 'package:fix_hub/utils/app_assets.dart';
-import 'package:fix_hub/utils/app_colors.dart';
-import 'package:fix_hub/utils/app_route.dart';
-import 'package:fix_hub/utils/app_style.dart';
-import 'package:fix_hub/widget/custem_elevated_button.dart';
-import 'package:fix_hub/widget/custem_text_form_field.dart';
-import 'package:fix_hub/widget/custom_text.dart';
+import 'package:fix_hub/core/constants/app_assets.dart';
+import 'package:fix_hub/core/constants/app_colors.dart';
+import 'package:fix_hub/core/constants/app_route.dart';
+import 'package:fix_hub/shared/custem_elevated_button.dart';
+import 'package:fix_hub/shared/custem_text_form_field.dart';
+import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -28,6 +27,7 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(child: Image.asset(AppAssets.logoIsblue)),
+                  Gap(20),
                   Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: CustomText(
@@ -40,7 +40,7 @@ class LoginScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: CustemTextFormField(
-                      text: 'Enter Your Gmail',
+                      text: 'Gmail',
                       borderSideColor: AppColors.primaryBackgroundBlue,
                       hintStyleText:
                           TextStyle(color: AppColors.primaryBackgroundBlue),
@@ -61,13 +61,17 @@ class LoginScreen extends StatelessWidget {
                   Gap(10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child:  CustemTextFormField(
-                      text: 'Enter Your Password',
+                    child: CustemTextFormField(
+                      text: 'Password',
                       borderSideColor: AppColors.primaryBackgroundBlue,
                       hintStyleText:
                           TextStyle(color: AppColors.primaryBackgroundBlue),
                       obscureText: true,
-                      suffixIcon: Icon(CupertinoIcons.eye,color: AppColors.primaryBackgroundBlue,size: 15,),
+                      suffixIcon: Icon(
+                        CupertinoIcons.eye,
+                        color: AppColors.primaryBackgroundBlue,
+                        size: 15,
+                      ),
                       controller: passController,
                     ),
                   ),
@@ -88,19 +92,27 @@ class LoginScreen extends StatelessWidget {
                   ),
                   Gap(10),
                   Center(
-                    child: CustemElevatedButton(
-                      text: "Sign In",
-                      backGroundColor: AppColors.primaryButtonColor,
-                      checkIcon: false,
-                      child: Center(
-                          child: CustomText(
-                              text: 'Sign In',
-                              fontsize: 15,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white)),
-                      onPressed: () {
-                        Navigator.pushNamed(context, AppRoute.homeScreen);
+                    child: GestureDetector(
+                      onTap: () {
+                        if(_formkey.currentState!.validate()){
+                          print('sucess login');
+                        // Navigator.pushReplacementNamed(
+                        //     context, AppRoute.homeScreen);
+                        }
                       },
+                      child: Container(
+                        width: double.infinity,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: AppColors.primaryButtonColor,
+                        ),
+                        child: CustomText(
+                            text: 'Login',
+                            fontsize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryBackgroundWhite),
+                      ),
                     ),
                   ),
                   Center(

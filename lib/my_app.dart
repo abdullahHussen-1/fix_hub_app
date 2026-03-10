@@ -1,13 +1,17 @@
-import 'package:fix_hub/UI/forgot_password/forgot_password_screen.dart';
-import 'package:fix_hub/UI/home/home_screen.dart';
-import 'package:fix_hub/UI/login/login_screen.dart';
-import 'package:fix_hub/UI/register/register_screen.dart';
+//import 'package:fix_hub/UI/auth/screens/forgot_password_screen.dart';
+import 'package:fix_hub/UI/auth/screens/password_screen.dart';
+import 'package:fix_hub/UI/chat/chat_screen.dart';
+import 'package:fix_hub/UI/home/category_screen.dart';
+import 'package:fix_hub/UI/auth/screens/login_screen.dart';
+import 'package:fix_hub/UI/auth/screens/register_screen.dart';
+import 'package:fix_hub/UI/profile/profile_screen.dart';
+import 'package:fix_hub/UI/tasks/tasks_screen.dart';
 import 'package:fix_hub/UI/user_type/user_type_screen.dart';
-import 'package:fix_hub/utils/app_route.dart';
-import 'package:fix_hub/utils/app_them.dart';
+import 'package:fix_hub/core/constants/app_route.dart';
+import 'package:fix_hub/core/constants/app_them.dart';
 import 'package:flutter/material.dart';
 
-import 'UI/splash/splash_screen.dart';
+import '../UI/splash/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,8 +29,12 @@ class MyApp extends StatelessWidget {
           AppRoute.userTypeScreen: (context) => UserTypeScreen(),
           AppRoute.loginScreen: (context) => LoginScreen(),
           AppRoute.registerScreen: (context) => RegisterScreen(),
-          AppRoute.forgotPasswordScreen: (context) => ForgotPasswordScreen(),
-          AppRoute.homeScreen: (context) => HomeScreen(),
+          AppRoute.passwordScreen: (context) => PasswordScreen(),
+        //  AppRoute.forgotPasswordScreen: (context) => ForgotPasswordScreen(),
+          AppRoute.profileScreen: (context) => ProfileScreen(),
+          AppRoute.category: (context) => CategoryScreen(),
+          AppRoute.chatScreen: (context) => Chatscreen(),
+          AppRoute.tasksScreen: (context) => TasksScreen(),
         },
       ),
     );

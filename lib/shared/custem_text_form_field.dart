@@ -1,12 +1,12 @@
-import 'package:fix_hub/utils/app_colors.dart';
-import 'package:fix_hub/utils/app_style.dart';
+import 'package:fix_hub/core/constants/app_colors.dart';
+import 'package:fix_hub/core/constants/app_style.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class CustemTextFormField extends StatefulWidget {
   Color borderSideColor;
-  String text;
-  TextStyle hintStyleText;
+  String ?text;
+  TextStyle? hintStyleText;
   TextStyle? styleText;
   Widget? prefixIcon;
   Widget? suffixIcon;
@@ -16,10 +16,10 @@ class CustemTextFormField extends StatefulWidget {
   int maxLines;
   Function(String)? onChange;
 
-  CustemTextFormField({
-    required this.text,
+  CustemTextFormField({super.key, 
+     this.text,
     required this.borderSideColor,
-    required this.hintStyleText,
+    this.hintStyleText,
     this.prefixIcon,
     this.suffixIcon,
     this.styleText,

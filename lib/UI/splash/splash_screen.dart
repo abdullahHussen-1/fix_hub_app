@@ -1,6 +1,6 @@
-import 'package:fix_hub/utils/app_assets.dart';
-import 'package:fix_hub/utils/app_colors.dart';
-import 'package:fix_hub/utils/app_route.dart';
+import 'package:fix_hub/core/constants/app_assets.dart';
+import 'package:fix_hub/core/constants/app_colors.dart';
+import 'package:fix_hub/core/constants/app_route.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -1,9 +1,9 @@
-import 'package:fix_hub/utils/app_assets.dart';
-import 'package:fix_hub/utils/app_colors.dart';
-import 'package:fix_hub/utils/app_media_query.dart';
-import 'package:fix_hub/utils/app_route.dart';
-import 'package:fix_hub/utils/app_style.dart';
-import 'package:fix_hub/widget/custem_elevated_button.dart';
+import 'package:fix_hub/core/constants/app_assets.dart';
+import 'package:fix_hub/core/constants/app_colors.dart';
+import 'package:fix_hub/core/constants/app_media_query.dart';
+import 'package:fix_hub/core/constants/app_route.dart';
+import 'package:fix_hub/core/constants/app_style.dart';
+import 'package:fix_hub/shared/custem_elevated_button.dart';
 import 'package:flutter/material.dart';
 
 class UserTypeScreen extends StatefulWidget {
@@ -81,7 +81,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                 child: Text("Next", style: AppStyle.medium16whiteTest),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, AppRoute.loginScreen);
+                Navigator.pushNamed(context, AppRoute.registerScreen);
               },
             ),
           ],
