@@ -9,4 +9,10 @@ class AppRoute {
   static const String chatScreen = "Chatscreen";
   static const String profileScreen = "ProfileScreen";
   static const String tasksScreen = "TasksScreen";
+  static const String customerRootScreen = "CustomerRootScreen";
+  static const String craftManRootScreen = "CraftManRootScreen";
+  static const String craftManListScreen = "craftsMansList";
+  static const String craftsMansDetailsScreen = "craftsMansDetiels";
+  static const String addRequestScreen = "addRequest";
+   static const String addReviewScreen = "addReview";
 }

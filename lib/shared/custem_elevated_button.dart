@@ -1,6 +1,7 @@
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/core/constants/app_style.dart';
+import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -59,9 +60,12 @@ class CustemElevatedButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-
               onPressed: onPressed,
-              child: Text(text, style: AppStyle.error16red),
+              child: CustomText(
+                  text: text,
+                  fontsize: 15,
+                  fontWeight: FontWeight.normal,
+                  color: AppColors.primaryBackgroundWhite),
             ),
     );
   }

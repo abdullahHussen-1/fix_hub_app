@@ -1,134 +1,175 @@
+import 'package:fix_hub/UI/auth/data/auth_repo.dart';
 import 'package:fix_hub/core/constants/app_assets.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
+import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
+import 'package:fix_hub/core/network/api_error.dart';
 import 'package:fix_hub/shared/custem_elevated_button.dart';
 import 'package:fix_hub/shared/custem_text_form_field.dart';
+import 'package:fix_hub/shared/custom_label_text.dart';
+import 'package:fix_hub/shared/custom_snackBar.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passController = TextEditingController();
+
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
+  bool isLoading = false;
+
+  AuthRepo authRepo = AuthRepo();
+
+  Future<void> login() async {
+    if (_formkey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        final user = await authRepo.login(
+            phoneController.text.trim(), passController.text);
+
+        if (user != null && user.role == 'Customer') {
+          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
+        } else if (user != null && user.role == 'craftman') {
+          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        String errormsg = 'Unhandled error in login';
+
+        if (e is ApiError) {
+          errormsg = e.message;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(errormsg));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController gmailController = TextEditingController();
-    TextEditingController passController = TextEditingController();
-    final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: AppColors.primaryButtonColor,
+        backgroundColor: AppColors.primaryBackgroundWhite,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formkey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(child: Image.asset(AppAssets.logoIsblue)),
-                  Gap(20),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: CustomText(
-                        text: 'User : ',
-                        fontsize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const Gap(20),
+
+                /// logo
+                Center(
+                  child: Image.asset(
+                    AppAssets.logoIsblue,
+                    height: 120,
                   ),
-                  Gap(10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: CustemTextFormField(
-                      text: 'Gmail',
-                      borderSideColor: AppColors.primaryBackgroundBlue,
-                      hintStyleText:
-                          TextStyle(color: AppColors.primaryBackgroundBlue),
-                      obscureText: false,
-                      suffixIcon: Icon(CupertinoIcons.eye),
-                      controller: gmailController,
-                    ),
-                  ),
-                  Gap(10),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: CustomText(
-                        text: 'Password : ',
-                        fontsize: 15,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black),
-                  ),
-                  Gap(10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: CustemTextFormField(
-                      text: 'Password',
-                      borderSideColor: AppColors.primaryBackgroundBlue,
-                      hintStyleText:
-                          TextStyle(color: AppColors.primaryBackgroundBlue),
-                      obscureText: true,
-                      suffixIcon: Icon(
-                        CupertinoIcons.eye,
-                        color: AppColors.primaryBackgroundBlue,
-                        size: 15,
-                      ),
-                      controller: passController,
-                    ),
-                  ),
-                  Gap(20),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, AppRoute.forgotPasswordScreen);
-                      },
-                      child: CustomText(
-                          text: 'Forget your password?',
-                          fontsize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black),
-                    ),
-                  ),
-                  Gap(10),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        if(_formkey.currentState!.validate()){
-                          print('sucess login');
-                        // Navigator.pushReplacementNamed(
-                        //     context, AppRoute.homeScreen);
-                        }
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: AppColors.primaryButtonColor,
+                ),
+                const Gap(30),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: SizedBox(
+                      width: AppMediaQuery.sizeWidth(context) - 40,
+                      child: Form(
+                        key: _formkey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomLabelText(text: 'Phone Number :'),
+                            const Gap(10),
+                            CustemTextFormField(
+                              keyboardType: TextInputType.phone,
+                              text: 'Enter Phone Number',
+                              borderSideColor: AppColors.primaryBackgroundBlue,
+                              controller: phoneController,
+                            ),
+                            const Gap(20),
+                            CustomLabelText(text: 'Password :'),
+                            const Gap(10),
+                            CustemTextFormField(
+                              text: 'Enter Password',
+                              borderSideColor: AppColors.primaryBackgroundBlue,
+                              obscureText: true,
+                              controller: passController,
+                            ),
+                            const Gap(15),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: CustomText(
+                                  text: 'Forget your password?',
+                                  fontsize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            const Gap(30),
+                            Center(
+                              child: isLoading
+                                  ? CupertinoActivityIndicator(
+                                      color: AppColors.primaryBackgroundBlue)
+                                  : CustemElevatedButton(
+                                      heightContainer: 50,
+                                      widthContainer: double.infinity,
+                                      onPressed: () {
+                                        login();
+                                      },
+                                      text: 'Login',
+                                      backGroundColor:
+                                          AppColors.primaryBackgroundBlue,
+                                      checkIcon: false,
+                                    ),
+                            ),
+                            const Gap(10),
+                            Center(
+                              child: GestureDetector(
+                                onTap: () => Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoute.registerScreen,
+                                ),
+                                child: CustomText(
+                                  text: 'Sign Up',
+                                  fontsize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  color: AppColors.blackColor,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        child: CustomText(
-                            text: 'Login',
-                            fontsize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primaryBackgroundWhite),
                       ),
                     ),
                   ),
-                  Center(
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacementNamed(
-                              context, AppRoute.registerScreen);
-                        },
-                        child: CustomText(
-                            text: 'Sign Up',
-                            fontsize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: AppColors.blackColor)),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

@@ -15,4 +15,8 @@ class AppColors {
 
   //todo text
   static const Color blackColor = Color(0xFF000000);
+  static const Color lightGreyBlue = Color(0xFFE3F2FD);
+  static const Color lightBlueBorder = Color(0xFFB0BEC5);
+  static const Color tabBarUnselected = Colors.grey;
+  static const Color darkTextIcon = Color(0xFF2E3D4D);
 }

@@ -51,13 +51,11 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                   focusedBorder: outlineInputBorderItem(
                     colorBorder: AppColors.primaryBackgroundBlue,
                   ),
-
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 value: SelecteValue,
-
                 items: ["Technical", "Costumer"]
                     .map(
                       (value) => DropdownMenuItem(
@@ -81,7 +79,8 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                 child: Text("Next", style: AppStyle.medium16whiteTest),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, AppRoute.registerScreen);
+                Navigator.pushNamed(context, AppRoute.customerRootScreen,
+                    arguments: SelecteValue);
               },
             ),
           ],
