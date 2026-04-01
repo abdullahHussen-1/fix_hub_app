@@ -10,7 +10,7 @@ class AppThem {
     ),
     fontFamily: 'Roboto',
     // todo tab bar theme
-    tabBarTheme: TabBarTheme(
+    tabBarTheme: TabBarThemeData(
       indicator: const UnderlineTabIndicator(
         borderSide:
             BorderSide(width: 3.0, color: AppColors.primaryBackgroundBlue),

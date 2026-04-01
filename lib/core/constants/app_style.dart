@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 class AppStyle {
   //todo error messages
   static TextStyle error16red = TextStyle(
-    fontSize: 16,
+    fontSize: 20,
     color: AppColors.redColor,
     height: 1.5,
+    fontWeight: FontWeight.bold,
   );
 
   static TextStyle medium16primaryTest = TextStyle(

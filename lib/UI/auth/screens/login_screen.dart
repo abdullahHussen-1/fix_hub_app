@@ -30,38 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   AuthRepo authRepo = AuthRepo();
 
-  Future<void> login() async {
-    if (_formkey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
-      try {
-        final user = await authRepo.login(
-            phoneController.text.trim(), passController.text);
-
-        if (user != null && user.role == 'Customer') {
-          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
-        } else if (user != null && user.role == 'craftman') {
-          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
-          setState(() {
-            isLoading = false;
-          });
-        }
-      } catch (e) {
-        setState(() {
-          isLoading = false;
-        });
-        String errormsg = 'Unhandled error in login';
-
-        if (e is ApiError) {
-          errormsg = e.message;
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(errormsg));
-      }
-    }
-  }
-
   @override
   void dispose() {
     phoneController.dispose();
@@ -85,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 /// logo
                 Center(
                   child: Image.asset(
-                    AppAssets.logoIsblue,
+                    AppAssets.logoIsBlue,
                     height: 120,
                   ),
                 ),
@@ -122,7 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, AppRoute.forgotPasswordScreen);
+                                },
                                 child: CustomText(
                                   text: 'Forget your password?',
                                   fontsize: 15,
@@ -143,8 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         login();
                                       },
                                       text: 'Login',
-                                      backGroundColor:
-                                          AppColors.primaryBackgroundBlue,
+                                      backGroundColor: AppColors.blackColor,
                                       checkIcon: false,
                                     ),
                             ),
@@ -175,5 +145,37 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> login() async {
+    if (_formkey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        final user = await authRepo.login(
+            phoneController.text.trim(), passController.text);
+
+        if (user != null && user.role == 'Customer') {
+          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
+        } else if (user != null && user.role == 'craftman') {
+          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        String errormsg = 'Unhandled error in login';
+
+        if (e is ApiError) {
+          errormsg = e.message;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(errormsg));
+      }
+    }
   }
 }

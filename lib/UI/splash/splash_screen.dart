@@ -1,7 +1,9 @@
 import 'package:fix_hub/core/constants/app_assets.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
+import 'package:fix_hub/provider/provider_user_type.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,8 +45,13 @@ class _SplashScreenState extends State<SplashScreen>
 
     //todo repeat=> animation automatically repeats itself after finishes
     controller.repeat(reverse: true);
+    //todo context.read=> Takes the value once
+    var userType = context.read<ProviderUserType>();
     Future.delayed(Duration(seconds: 5), () {
-      Navigator.pushReplacementNamed(context, AppRoute.userTypeScreen);
+      userType.userTypeProvider == null
+          ? Navigator.pushReplacementNamed(context, AppRoute.userTypeScreen)
+          : Navigator.pushReplacementNamed(
+              context, AppRoute.customerRootScreen);
     });
   }
 

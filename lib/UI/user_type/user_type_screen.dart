@@ -3,8 +3,10 @@ import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
 import 'package:fix_hub/core/constants/app_style.dart';
+import 'package:fix_hub/provider/provider_user_type.dart';
 import 'package:fix_hub/shared/custem_elevated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserTypeScreen extends StatefulWidget {
   const UserTypeScreen({super.key});
@@ -14,21 +16,26 @@ class UserTypeScreen extends StatefulWidget {
 }
 
 class _UserTypeScreenState extends State<UserTypeScreen> {
-  String? SelecteValue;
+  String? selectValue;
+  bool isnull = false;
 
   @override
   Widget build(BuildContext context) {
+    var userType = Provider.of<ProviderUserType>(context);
     return Scaffold(
-      //backgroundColor: Colors.black,
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: AppMediaQuery.sizeWidth(context) * 0.02,
+          horizontal: AppMediaQuery.sizeWidth(context) * 0.08,
           vertical: AppMediaQuery.sizeHeight(context) * 0.02,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(AppAssets.logoIsWhite),
+            Image.asset(AppAssets.logoIsBlue),
+            SizedBox(
+              height: AppMediaQuery.sizeHeight(context) * 0.05,
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: AppMediaQuery.sizeWidth(context) * 0.04,
@@ -43,7 +50,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
               child: DropdownButtonFormField<String>(
                 iconEnabledColor: AppColors.blackColor,
                 decoration: InputDecoration(
-                  labelText: SelecteValue == null ? "Choose User" : null,
+                  labelText: selectValue == null ? "Choose User" : null,
                   labelStyle: AppStyle.bold16blackTest,
                   enabledBorder: outlineInputBorderItem(
                     colorBorder: AppColors.primaryBackgroundBlue,
@@ -55,7 +62,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                value: SelecteValue,
+                value: selectValue,
                 items: ["Technical", "Costumer"]
                     .map(
                       (value) => DropdownMenuItem(
@@ -66,7 +73,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                     .toList(),
                 onChanged: (value) {
                   setState(() {
-                    SelecteValue = value;
+                    selectValue = value;
                   });
                 },
               ),
@@ -79,10 +86,23 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                 child: Text("Next", style: AppStyle.medium16whiteTest),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, AppRoute.customerRootScreen,
-                    arguments: SelecteValue);
+                userType.changeUserType(selectValue ?? " ");
+                selectValue != null
+                    ? Navigator.pushNamed(
+                        context, AppRoute.loginScreen /*customerRootScreen*/
+                        )
+                    : isnull = true;
+                print(userType.userTypeProvider);
               },
             ),
+            isnull
+                ? Center(
+                    child: Text(
+                      "Please Enter Choose User",
+                      style: AppStyle.error16red,
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
       ),
