@@ -2,14 +2,11 @@ import 'package:fix_hub/UI/auth/data/auth_repo.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
-import 'package:fix_hub/core/network/api_error.dart';
 import 'package:fix_hub/provider/provider_user_type.dart';
-import 'package:fix_hub/shared/custem_elevated_button.dart';
 import 'package:fix_hub/shared/custem_text_form_field.dart';
 import 'package:fix_hub/shared/custom_appBar.dart';
 import 'package:fix_hub/shared/custom_dropDown.dart';
 import 'package:fix_hub/shared/custom_label_text.dart';
-import 'package:fix_hub/shared/custom_snackBar.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,50 +47,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late ProviderUserType userType;
   AuthRepo authRepo = AuthRepo();
 
-  Future<void> register() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
-
-      try {
-        final user = await authRepo.register(
-            nameController.text.trim(),
-            numberController.text.trim(),
-            nationalIdController.text.trim(),
-            selectedCity.toString(),
-            addressController.text,
-            selectedSpecialty.toString(),
-            passwordController.text,
-            confirmPasswordController.text);
-
-        if (user != null && user.role == 'customer') {
-          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
-          setState(() {
-            isLoading = false;
-          });
-        } else if (user != null && user.role == 'craftman') {
-          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
-          setState(() {
-            isLoading = false;
-          });
-        }
-      } catch (e) {
-        setState(() {
-          isLoading = false;
-        });
-        String errormsg = 'Unhandled error in Register';
-        if (e is ApiError) {
-          errormsg = e.message;
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSnackBar(errormsg),
-        );
-      }
-    }
-  }
-
   @override
   void dispose() {
     nameController.dispose();
@@ -118,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 CustomAppbar(
                   onTap: () {
-                    register();
+                    checkRegister();
                   },
                   text: 'Sign In',
                 ),
@@ -262,11 +215,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(
                   height: AppMediaQuery.sizeHeight(context) * 0.03,
                 ),
-                CustemElevatedButton(
-                  text: "Register",
-                  backGroundColor: AppColors.blackColor,
-                  onPressed: checkRegister,
-                )
               ],
             ),
           ),
@@ -278,7 +226,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void checkRegister() {
     //if (_formKey.currentState!.validate()) {}
     userType.userTypeProvider == "Technical"
-        ? Navigator.pushNamed(context, AppRoute.tasksScreen)
+        ? Navigator.pushNamed(context, AppRoute.craftManRootScreen)
         : Navigator.pushNamed(context, AppRoute.customerRootScreen);
   }
 }
+/* Future<void> register() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        final user = await authRepo.register(
+            nameController.text.trim(),
+            numberController.text.trim(),
+            nationalIdController.text.trim(),
+            selectedCity.toString(),
+            addressController.text,
+            selectedSpecialty.toString(),
+            passwordController.text,
+            confirmPasswordController.text);
+
+        if (user != null && user.role == 'customer') {
+          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
+          setState(() {
+            isLoading = false;
+          });
+        } else if (user != null && user.role == 'craftman') {
+          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        String errormsg = 'Unhandled error in Register';
+        if (e is ApiError) {
+          errormsg = e.message;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          customSnackBar(errormsg),
+        );
+      }
+    }
+  }*/

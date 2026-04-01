@@ -62,6 +62,6 @@ class ForgetPasswordScreen extends StatelessWidget {
   }
 
   void CheckPassword() {
-    //if (_formKey.currentState!.validate()) {}
+    ///if (_formKey.currentState!.validate()) {}
   }
 }

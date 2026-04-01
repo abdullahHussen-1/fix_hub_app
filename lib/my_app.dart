@@ -12,6 +12,7 @@ import 'package:fix_hub/UI/tasks/tasks_screen.dart';
 import 'package:fix_hub/UI/user_type/user_type_screen.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
 import 'package:fix_hub/core/constants/app_them.dart';
+import 'package:fix_hub/craftsmans_root.dart';
 import 'package:fix_hub/customer_root.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
           AppRoute.chatScreen: (context) => Chatscreen(),
           AppRoute.tasksScreen: (context) => TasksScreen(),
           AppRoute.customerRootScreen: (context) => CustomerRoot(),
-          AppRoute.craftManRootScreen: (context) => CustomerRoot(),
+          AppRoute.craftManRootScreen: (context) => CraftsManRootScreen(),
           AppRoute.craftManListScreen: (context) => CraftsMansListScreen(),
           AppRoute.craftsMansDetailsScreen: (context) => CraftsMansDetails(),
           AppRoute.addRequestScreen: (context) => AddrequestScreen(),

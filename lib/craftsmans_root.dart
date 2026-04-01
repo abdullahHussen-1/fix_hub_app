@@ -1,18 +1,18 @@
-import 'package:fix_hub/UI/chat/chat_screen.dart';
 import 'package:fix_hub/UI/auth/screens/profile_screen.dart';
+import 'package:fix_hub/UI/chat/chat_screen.dart';
 import 'package:fix_hub/UI/tasks/tasks_screen.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CustomerRoot extends StatefulWidget {
-  const CustomerRoot({super.key});
+class CraftsManRootScreen extends StatefulWidget {
+  const CraftsManRootScreen({super.key});
 
   @override
-  State<CustomerRoot> createState() => _CustomerRootState();
+  State<CraftsManRootScreen> createState() => _CraftsManRootScreenState();
 }
 
-class _CustomerRootState extends State<CustomerRoot> {
+class _CraftsManRootScreenState extends State<CraftsManRootScreen> {
   late PageController pageController;
   int currentPage = 0;
   late List<Widget> screens;
@@ -20,7 +20,7 @@ class _CustomerRootState extends State<CustomerRoot> {
   @override
   void initState() {
     screens = [
-       TasksScreen(),
+      TasksScreen(),
       Chatscreen(),
       ProfileScreen(),
     ];
@@ -65,8 +65,7 @@ class _CustomerRootState extends State<CustomerRoot> {
           borderRadius: BorderRadius.circular(35),
           child: BottomNavigationBar(
             backgroundColor: AppColors.primaryBackgroundBlue,
-            selectedItemColor:
-                AppColors.primaryBackgroundWhite, 
+            selectedItemColor: AppColors.primaryBackgroundWhite,
             unselectedItemColor:
                 AppColors.primaryBackgroundWhite.withOpacity(0.5),
             elevation: 0,
@@ -91,7 +90,7 @@ class _CustomerRootState extends State<CustomerRoot> {
                 activeIcon: Icon(CupertinoIcons.chat_bubble, size: 28),
                 label: '',
               ),
-               BottomNavigationBarItem(
+              BottomNavigationBarItem(
                 icon: Icon(Icons.person_sharp, size: 24),
                 activeIcon: Icon(Icons.person, size: 28),
                 label: '',
