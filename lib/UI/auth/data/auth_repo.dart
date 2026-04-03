@@ -31,7 +31,7 @@ class AuthRepo {
         final user = UserModel.fromJson(response['data']);
         if (user.tocken != null) {
           // todo if tocken is not null save it to local storage
-          await PrefHelper.saveTocken(user.tocken!);
+          await PrefHelper.saveToken(user.tocken!);
         }
         return user;
       } else {
@@ -80,7 +80,7 @@ class AuthRepo {
         }
         final user = UserModel.fromJson(data);
         if (user.tocken != null) {
-          await PrefHelper.saveTocken(user.tocken!);
+          await PrefHelper.saveToken(user.tocken!);
         }
         return user;
       } else {

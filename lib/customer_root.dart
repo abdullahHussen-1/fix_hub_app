@@ -1,7 +1,6 @@
 import 'package:fix_hub/UI/chat/chat_screen.dart';
 import 'package:fix_hub/UI/auth/screens/profile_screen.dart';
 import 'package:fix_hub/UI/home/screens/category_screen.dart';
-import 'package:fix_hub/UI/tasks/tasks_screen.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class _CustomerRootState extends State<CustomerRoot> {
       CategoryScreen(),
       Chatscreen(),
       ProfileScreen(),
-      TasksScreen(),
+  
     ];
 
     pageController = PageController();
@@ -99,11 +98,7 @@ class _CustomerRootState extends State<CustomerRoot> {
                 activeIcon: Icon(Icons.person, size: 28),
                 label: '',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.mail, size: 24),
-                activeIcon: Icon(CupertinoIcons.mail_solid, size: 28),
-                label: '',
-              ),
+
             ],
           ),
         ),

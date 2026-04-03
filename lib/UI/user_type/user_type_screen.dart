@@ -23,12 +23,12 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
   Widget build(BuildContext context) {
     var userType = Provider.of<ProviderUserType>(context);
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppMediaQuery.sizeWidth(context) * 0.08,
-          vertical: AppMediaQuery.sizeHeight(context) * 0.02,
-        ),
-        child: Expanded(
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppMediaQuery.sizeWidth(context) * 0.08,
+            vertical: AppMediaQuery.sizeHeight(context) * 0.02,
+          ),
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: SizedBox(
@@ -95,7 +95,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                       userType.changeUserType(selectValue ?? " ");
                       selectValue != null
                           ? Navigator.pushNamed(context,
-                              AppRoute.loginScreen /*customerRootScreen*/
+                              AppRoute.registerScreen /*customerRootScreen*/
                               )
                           : isnull = true;
                       print(userType.userTypeProvider);

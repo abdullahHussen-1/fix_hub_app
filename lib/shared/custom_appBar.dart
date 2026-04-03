@@ -58,15 +58,6 @@ class CustomAppbar extends StatelessWidget {
             ),
             //Gap(15),
           ],
-          /* IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_forward_rounded,
-                color: Colors.white,
-                size: 20,
-              ))*/
         ],
       ),
     );
