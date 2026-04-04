@@ -17,36 +17,36 @@ class CraftsMansDetails extends StatelessWidget {
       length: 3,
       child: Scaffold(
         backgroundColor: AppColors.primaryBackgroundWhite,
-        appBar: AppBar(
-          toolbarHeight: 100,
-          backgroundColor: AppColors.primaryBackgroundBlue,
-          elevation: 0,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(40),
-            ),
-          ),
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.primaryBackgroundWhite,
-            ),
-          ),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Icon(Icons.notifications_outlined, color: Colors.white),
-            )
-          ],
-        ),
+        // appBar: AppBar(
+        //   toolbarHeight: 100,
+        //   backgroundColor: AppColors.primaryBackgroundBlue,
+        //   elevation: 0,
+        //   shape: const RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.vertical(
+        //       bottom: Radius.circular(40),
+        //     ),
+        //   ),
+        //   leading: IconButton(
+        //     onPressed: () => Navigator.pop(context),
+        //     icon: const Icon(
+        //       Icons.arrow_back_ios,
+        //       color: AppColors.primaryBackgroundWhite,
+        //     ),
+        //   ),
+        //   actions: const [
+        //     Padding(
+        //       padding: EdgeInsets.only(right: 16),
+        //       child: Icon(Icons.notifications_outlined, color: Colors.white),
+        //     )
+        //   ],
+        // ),
         body: Column(
           children: [
             Gap(10),
             const CustomHeaderCraftsman(),
-            Gap(10),
+            Gap(5),
             const ContactButtons(),
-            const Gap(20),
+            const Gap(5),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: TabBar(

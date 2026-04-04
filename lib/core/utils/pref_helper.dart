@@ -2,20 +2,22 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefHelper {
-  static const String _tockenKey = 'auth_tocken';
-  // todo future function use to save tocken 
-  static Future<void> saveTocken(String tocken) async {
+  static const String _tokenKey = 'auth_token';
+  // todo future function use to save tocken
+  static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tockenKey, tocken);
+    await prefs.setString(_tokenKey, token);
   }
- // todo future function use to get tocken 
-  static Future<String?> getTocken() async {
+
+  // todo future function use to get tocken
+  static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-   return prefs.getString(_tockenKey);
+    return prefs.getString(_tokenKey);
   }
-   // todo future function use to remove tocken like logout 
-  static Future<void> clerTocken() async {
+
+  // todo future function use to remove tocken like logout
+  static Future<void> clerToken() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove(_tockenKey);
+    await prefs.remove(_tokenKey);
   }
 }

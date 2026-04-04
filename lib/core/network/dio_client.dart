@@ -12,11 +12,11 @@ class DioClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         // todo send tocken when request
-        onRequest: (options, handler) async{
-          final tocken = await PrefHelper.getTocken(); 
+        onRequest: (options, handler) async {
+          final token = await PrefHelper.getToken();
           //todo check tocken
-          if (tocken != null && tocken.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $tocken';
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
           }
           return handler.next(options);
         },

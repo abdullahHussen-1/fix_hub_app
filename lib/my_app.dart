@@ -15,9 +15,8 @@ import 'package:fix_hub/core/constants/app_them.dart';
 import 'package:fix_hub/craftsmans_root.dart';
 import 'package:fix_hub/customer_root.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fix_hub/UI/addReview/addReview_screen.dart';
 import '../UI/splash/splash_screen.dart';
-import 'UI/home/screens/subscreens/addReview_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -45,7 +44,7 @@ class MyApp extends StatelessWidget {
           AppRoute.craftManListScreen: (context) => CraftsMansListScreen(),
           AppRoute.craftsMansDetailsScreen: (context) => CraftsMansDetails(),
           AppRoute.addRequestScreen: (context) => AddrequestScreen(),
-          AppRoute.addReviewScreen: (context) => AddReviewScreen(),
+          AppRoute.addReviewScreen: (context) => AddreviewScreen(),
         },
       ),
     );
