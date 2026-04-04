@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:fix_hub/core/constants/app_assets.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
@@ -6,8 +9,9 @@ import 'package:fix_hub/shared/custom_appBar.dart';
 import 'package:fix_hub/shared/custom_label_text.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
-import 'package:flutter_animate/flutter_animate.dart'; 
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,6 +31,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final addressController =
       TextEditingController(text: "Al Kabsh, Sohag 2, Sohag Governorate");
   final roleController = TextEditingController(text: "Electrical Technician");
+  final ImagePicker picker = ImagePicker();
+  File? selectImage;
 
   @override
   void dispose() {
@@ -58,17 +64,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     .animate()
                     .fade(duration: 400.ms)
                     .slideY(begin: -0.5, curve: Curves.easeOut),
-
                 const Gap(20),
-
                 Expanded(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: SizedBox(
                       width: AppMediaQuery.sizeWidth(context) - 30,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
+                          Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              Container(
+                                width: 150,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: selectImage == null
+                                        ? DecorationImage(
+                                            image: AssetImage(
+                                              AppAssets.nullImage,
+                                            ),
+                                          )
+                                        : DecorationImage(
+                                            image: FileImage(
+                                                File(selectImage!.path)),
+                                            fit: BoxFit.fill)),
+                              ),
+                              IconButton(
+                                  onPressed: () async {
+                                    final image = await picker.pickImage(
+                                        source: ImageSource.gallery);
+                                    setState(() {
+                                      if (image != null) {
+                                        selectImage = File(image.path);
+                                      }
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.camera_alt,
+                                    size: 45,
+                                    color: AppColors.blackColor,
+                                  ))
+                            ],
+                          ),
                           CustomLabelText(text: 'Name :'),
                           CustemTextFormField(
                             controller: nameController,
@@ -137,14 +177,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderSideColor: AppColors.primaryBackgroundBlue,
                             ),
                           ],
-                        ]
-                            
-                            .animate(interval: 40.ms)
-                            .fade(duration: 400.ms)
-                            .slideX(
-                                begin: 0.05,
-                                curve: Curves
-                                    .easeOut), // بيدخلوا من اليمين شوية لليسار بنعومة
+                        ].animate(interval: 40.ms).fade(duration: 400.ms).slideX(
+                            begin: 0.05,
+                            curve: Curves
+                                .easeOut), // بيدخلوا من اليمين شوية لليسار بنعومة
                       ),
                     ),
                   ),
@@ -176,3 +212,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+/* CircleAvatar(
+                            radius: 100,
+                            backgroundColor: Colors.red,
+                            /*child: selectImage == null
+                                ? Text("data")
+                                : Image.file(
+                                    File(selectImage!.path),
+                                  ),*/
+                            backgroundImage: selectImage == null
+                                ? AssetImage(
+                                    AppAssets.nullImage,
+                                  )
+                                : FileImage(File(selectImage!.path)),
+                          ),*/
+/* CircleAvatar(
+                            radius: 60,
+                            child: ClipOval(
+                              child: selectImage == null
+                                  ? Image.asset(
+                                      AppAssets.nullImage,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : Image.file(
+                                      File(selectImage!.path),
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),*/

@@ -11,6 +11,7 @@ import 'package:fix_hub/shared/custom_snackBar.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -49,13 +50,16 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 const Gap(20),
-
-                /// logo
                 Center(
                   child: Image.asset(
                     AppAssets.logoIsBlue,
                     height: 120,
-                  ),
+                  )
+                      .animate(
+                      onPlay: (controller) =>
+                          controller.repeat(reverse: true))
+                      .fade(duration: 6.seconds)
+                      .scale(),
                 ),
                 const Gap(30),
                 Expanded(
@@ -72,11 +76,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             CustomLabelText(text: 'Phone Number :'),
                             const Gap(10),
                             CustemTextFormField(
-                              keyboardType: TextInputType.phone,
-                              text: 'Enter Phone Number',
-                              borderSideColor: AppColors.primaryBackgroundBlue,
-                              controller: phoneController,
-                            ),
+                                keyboardType: TextInputType.phone,
+                                text: 'Enter Phone Number',
+                                borderSideColor:
+                                AppColors.primaryBackgroundBlue,
+                                controller: phoneController,
+                                validator: (vale) {
+                                  if (vale!.isEmpty) {
+                                    return "Please Fill Enter Phone Number";
+                                  }
+                                  if (vale!.length < 11 || vale.length > 11) {
+                                    return "The number you entered is incorrect";
+                                  }
+                                  return null;
+                                }),
                             const Gap(20),
                             CustomLabelText(text: 'Password :'),
                             const Gap(10),
@@ -106,25 +119,26 @@ class _LoginScreenState extends State<LoginScreen> {
                             Center(
                               child: isLoading
                                   ? CupertinoActivityIndicator(
-                                      color: AppColors.primaryBackgroundBlue)
+                                  color: AppColors.primaryBackgroundBlue)
                                   : CustemElevatedButton(
-                                      heightContainer: 50,
-                                      widthContainer: double.infinity,
-                                      onPressed: () {
-                                        login();
-                                      },
-                                      text: 'Login',
-                                      backGroundColor: AppColors.blackColor,
-                                      checkIcon: false,
-                                    ),
+                                heightContainer: 50,
+                                widthContainer: double.infinity,
+                                onPressed: () {
+                                  login();
+                                },
+                                text: 'Login',
+                                backGroundColor: AppColors.blackColor,
+                                checkIcon: false,
+                              ),
                             ),
                             const Gap(10),
                             Center(
                               child: GestureDetector(
-                                onTap: () => Navigator.pushReplacementNamed(
-                                  context,
-                                  AppRoute.registerScreen,
-                                ),
+                                onTap: () =>
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      AppRoute.registerScreen,
+                                    ),
                                 child: CustomText(
                                   text: 'Sign Up',
                                   fontsize: 15,

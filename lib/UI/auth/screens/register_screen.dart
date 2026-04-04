@@ -8,7 +8,6 @@ import 'package:fix_hub/shared/custom_appBar.dart';
 import 'package:fix_hub/shared/custom_dropDown.dart';
 import 'package:fix_hub/shared/custom_label_text.dart';
 import 'package:fix_hub/shared/custom_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -95,24 +94,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const Gap(10),
                             CustomLabelText(text: 'Phone Number :'),
                             CustemTextFormField(
-                              keyboardType: TextInputType.phone,
-                              text: '+20',
-                              borderSideColor: AppColors.primaryBackgroundBlue,
-                              controller: numberController,
-                            ),
+                                keyboardType: TextInputType.phone,
+                                text: '+20',
+                                borderSideColor:
+                                    AppColors.primaryBackgroundBlue,
+                                controller: numberController,
+                                validator: (vale) {
+                                  if (vale!.isEmpty) {
+                                    return "Please Fill Enter Phone Number";
+                                  }
+                                  if (vale!.length < 11 || vale.length > 11) {
+                                    return "The number you entered is incorrect";
+                                  }
+                                  return null;
+                                }),
                             const Gap(10),
                             CustomLabelText(text: 'National ID :'),
                             CustemTextFormField(
                               keyboardType: TextInputType.number,
                               text: 'Your National ID',
                               borderSideColor: AppColors.primaryBackgroundBlue,
-                              suffixIcon:
-                                  userType.userTypeProvider == 'Technical'
-                                      ? const Icon(
-                                          CupertinoIcons.camera_fill,
-                                          color: Color(0xFF1E232C),
-                                        )
-                                      : null,
                               controller: nationalIdController,
                             ),
                             const Gap(10),
@@ -154,12 +155,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       CustomLabelText(text: 'Password :'),
                                       const Gap(5),
                                       CustemTextFormField(
-                                        text: 'Enter Password',
-                                        borderSideColor:
-                                            AppColors.primaryBackgroundBlue,
-                                        obscureText: true,
-                                        controller: passwordController,
-                                      ),
+                                          text: 'Enter Password',
+                                          borderSideColor:
+                                              AppColors.primaryBackgroundBlue,
+                                          obscureText: true,
+                                          controller: passwordController,
+                                          validator: (val) {
+                                            if (val!.trim().isEmpty) {
+                                              return "Please Fill Enter New Password";
+                                            }
+                                            final bool passwordValid = RegExp(
+                                              r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#\$&*~]{8,}$',
+                                            ).hasMatch(val);
+                                            if (val.length < 8) {
+                                              return "please Enter Password Greater 8 Number";
+                                            }
+                                            if (!passwordValid) {
+                                              return "Please Enter Password Contains number uppercase or lowercase letter and symbols";
+                                            }
+                                            return null;
+                                          }),
                                     ],
                                   ),
                                 ),
@@ -179,11 +194,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         obscureText: true,
                                         controller: confirmPasswordController,
                                         validator: (val) {
-                                          if (val == null || val.isEmpty) {
-                                            return 'Confirm password';
+                                          if (val!.trim().isEmpty) {
+                                            return "Please Fill Enter Confirmed Password";
                                           }
                                           if (val != passwordController.text) {
-                                            return 'Not match';
+                                            return "Please Enter The Matching Password";
                                           }
                                           return null;
                                         },
@@ -224,7 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void checkRegister() {
-    //if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {}
     userType.userTypeProvider == "Technical"
         ? Navigator.pushNamed(context, AppRoute.craftManRootScreen)
         : Navigator.pushNamed(context, AppRoute.customerRootScreen);
