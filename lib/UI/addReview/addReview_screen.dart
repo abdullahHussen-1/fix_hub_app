@@ -1,7 +1,6 @@
+import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/material.dart';
-
-import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../shared/custem_text_form_field.dart';

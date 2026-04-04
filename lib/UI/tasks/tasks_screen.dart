@@ -43,7 +43,6 @@ class _TasksScreenState extends State<TasksScreen> {
     setState(() => isLoading = false);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,19 +54,24 @@ class _TasksScreenState extends State<TasksScreen> {
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : tasks.isEmpty
-                    ? const Center(child:CustomText(text: 'No Works Available', fontsize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryBackgroundBlue))
+                    ? const Center(
+                        child: CustomText(
+                            text: 'No Works Available',
+                            fontsize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryBackgroundBlue))
                     : ListView.builder(
                         itemCount: tasks.length,
                         itemBuilder: (context, index) {
                           final item = tasks[index];
 
                           return CustomContainer(
-                            name: item.userName,
-                            image: item.userImage,
-                            description: item.description,
-                            address: item.address,
-                            onReply: () => Navigator.pushNamed(context, AppRoute.chatScreen)
-                          );
+                              name: item.userName,
+                              image: item.userImage,
+                              description: item.description,
+                              address: item.address,
+                              onReply: () => Navigator.pushNamed(
+                                  context, AppRoute.chatScreen));
                         },
                       ),
           ),

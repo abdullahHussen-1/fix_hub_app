@@ -20,13 +20,11 @@ class StarRating extends StatelessWidget {
       children: List.generate(5, (index) {
         return IconButton(
           onPressed: () => onRatingSelected(index + 1),
-          icon: Icon(
-            Icons.star,
-            size: iconSize,
-            color: index < rating
-                ? AppColors.primaryBackgroundBlue
-                : AppColors.lightBlueBorder
-          ),
+          icon: Icon(Icons.star,
+              size: iconSize,
+              color: index < rating
+                  ? AppColors.primaryBackgroundBlue
+                  : AppColors.lightBlueBorder),
         );
       }),
     );

@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 
 class ContactButtons extends StatelessWidget {
   const ContactButtons({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -48,7 +49,8 @@ class ContactButtons extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryButtonColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 ),
                 child: CustomText(
                   text: 'Add Request',
@@ -60,7 +62,7 @@ class ContactButtons extends StatelessWidget {
             ],
           ),
           Gap(10),
-            ElevatedButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(context, AppRoute.addReviewScreen);
             },

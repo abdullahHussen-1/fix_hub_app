@@ -1,5 +1,6 @@
 //import 'package:fix_hub/UI/auth/screens/forgot_password_screen.dart';
 import 'package:fix_hub/UI/addRequest/addRequest_screen.dart';
+import 'package:fix_hub/UI/addReview/addReview_screen.dart';
 import 'package:fix_hub/UI/auth/screens/login_screen.dart';
 import 'package:fix_hub/UI/auth/screens/profile_screen.dart';
 import 'package:fix_hub/UI/auth/screens/register_screen.dart';
@@ -15,7 +16,7 @@ import 'package:fix_hub/core/constants/app_them.dart';
 import 'package:fix_hub/craftsmans_root.dart';
 import 'package:fix_hub/customer_root.dart';
 import 'package:flutter/material.dart';
-import 'package:fix_hub/UI/addReview/addReview_screen.dart';
+
 import '../UI/splash/splash_screen.dart';
 
 class MyApp extends StatelessWidget {

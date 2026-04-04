@@ -1,5 +1,5 @@
-import 'package:fix_hub/UI/chat/chat_screen.dart';
 import 'package:fix_hub/UI/auth/screens/profile_screen.dart';
+import 'package:fix_hub/UI/chat/chat_screen.dart';
 import 'package:fix_hub/UI/home/screens/category_screen.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +23,6 @@ class _CustomerRootState extends State<CustomerRoot> {
       CategoryScreen(),
       Chatscreen(),
       ProfileScreen(),
-  
     ];
 
     pageController = PageController();
@@ -66,13 +65,14 @@ class _CustomerRootState extends State<CustomerRoot> {
           borderRadius: BorderRadius.circular(35),
           child: BottomNavigationBar(
             backgroundColor: AppColors.primaryBackgroundBlue,
-            selectedItemColor:
-                AppColors.primaryBackgroundWhite, // لون الأيقونة المختارة
-            unselectedItemColor:
-                Colors.white.withOpacity(0.5), // لون الأيقونة العادية
+            selectedItemColor: AppColors.primaryBackgroundWhite,
+            // لون الأيقونة المختارة
+            unselectedItemColor: Colors.white.withOpacity(0.5),
+            // لون الأيقونة العادية
             elevation: 0,
             type: BottomNavigationBarType.fixed,
-            showSelectedLabels: false, // إخفاء مساحة النصوص
+            showSelectedLabels: false,
+            // إخفاء مساحة النصوص
             showUnselectedLabels: false,
             currentIndex: currentPage,
             onTap: (index) {
@@ -98,7 +98,6 @@ class _CustomerRootState extends State<CustomerRoot> {
                 activeIcon: Icon(Icons.person, size: 28),
                 label: '',
               ),
-
             ],
           ),
         ),

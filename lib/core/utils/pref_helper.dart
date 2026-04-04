@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefHelper {
   static const String _tokenKey = 'auth_token';
+
   // todo future function use to save tocken
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();

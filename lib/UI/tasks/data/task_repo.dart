@@ -10,13 +10,16 @@ class TaskRepo {
 
   Future<List<TaskModel>> getTasks() async {
     try {
-      final res = await apiService.get('tasks');// TODO: change to real endpoint
+      final res =
+          await apiService.get('tasks'); // TODO: change to real endpoint
 
-      final code = int.tryParse(res['code'].toString()) ?? 500; // TODO: change to real code key
+      final code = int.tryParse(res['code'].toString()) ??
+          500; // TODO: change to real code key
       final data = res['data'];
 
       if (code != 200 && code != 201 || data == null) {
-        throw ApiError(message: res['message']); // TODO: change to real message key
+        throw ApiError(
+            message: res['message']); // TODO: change to real message key
       }
 
       return List<TaskModel>.from(
