@@ -28,90 +28,83 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
           horizontal: AppMediaQuery.sizeWidth(context) * 0.08,
           vertical: AppMediaQuery.sizeHeight(context) * 0.02,
         ),
-        child: Expanded(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: SizedBox(
-              width: AppMediaQuery.sizeWidth(context) - 40,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(AppAssets.logoIsBlue),
-                  SizedBox(
-                    height: AppMediaQuery.sizeHeight(context) * 0.05,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppMediaQuery.sizeWidth(context) * 0.04,
-                    ),
-                    child:
-                        Text("Select Role:", style: AppStyle.bold16blackTest),
-                  ),
-                  SizedBox(height: AppMediaQuery.sizeHeight(context) * 0.02),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppMediaQuery.sizeWidth(context) * 0.1,
-                    ),
-                    child: DropdownButtonFormField<String>(
-                      iconEnabledColor: AppColors.blackColor,
-                      decoration: InputDecoration(
-                        labelText: selectValue == null ? "Choose User" : null,
-                        labelStyle: AppStyle.bold16blackTest,
-                        enabledBorder: outlineInputBorderItem(
-                          colorBorder: AppColors.primaryBackgroundBlue,
-                        ),
-                        focusedBorder: outlineInputBorderItem(
-                          colorBorder: AppColors.primaryBackgroundBlue,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      value: selectValue,
-                      items: ["Technical", "Costumer"]
-                          .map(
-                            (value) => DropdownMenuItem(
-                              value: value,
-                              child: Center(child: Text(value)),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectValue = value;
-                        });
-                      },
-                    ),
-                  ),
-                  CustemElevatedButton(
-                    text: "",
-                    backGroundColor: AppColors.primaryButtonColor,
-                    checkIcon: true,
-                    child: Center(
-                      child: Text("Next", style: AppStyle.medium16whiteTest),
-                    ),
-                    onPressed: () {
-                      userType.changeUserType(selectValue ?? " ");
-                      selectValue != null
-                          ? Navigator.pushNamed(context,
-                              AppRoute.loginScreen /*customerRootScreen*/
-                              )
-                          : isnull = true;
-                      print(userType.userTypeProvider);
-                    },
-                  ),
-                  isnull
-                      ? Center(
-                          child: Text(
-                            "Please Enter Choose User",
-                            style: AppStyle.error16red,
-                          ),
-                        )
-                      : SizedBox()
-                ],
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(AppAssets.logoIsBlue),
+              SizedBox(
+                height: AppMediaQuery.sizeHeight(context) * 0.05,
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppMediaQuery.sizeWidth(context) * 0.04,
+                ),
+                child: Text("Select Role:", style: AppStyle.bold16blackTest),
+              ),
+              SizedBox(height: AppMediaQuery.sizeHeight(context) * 0.02),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppMediaQuery.sizeWidth(context) * 0.1,
+                ),
+                child: DropdownButtonFormField<String>(
+                  iconEnabledColor: AppColors.blackColor,
+                  decoration: InputDecoration(
+                    labelText: selectValue == null ? "Choose User" : null,
+                    labelStyle: AppStyle.bold16blackTest,
+                    enabledBorder: outlineInputBorderItem(
+                      colorBorder: AppColors.primaryBackgroundBlue,
+                    ),
+                    focusedBorder: outlineInputBorderItem(
+                      colorBorder: AppColors.primaryBackgroundBlue,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  value: selectValue,
+                  items: ["Technical", "Costumer"]
+                      .map(
+                        (value) => DropdownMenuItem(
+                          value: value,
+                          child: Center(child: Text(value)),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectValue = value;
+                    });
+                  },
+                ),
+              ),
+              CustemElevatedButton(
+                text: "",
+                backGroundColor: AppColors.primaryButtonColor,
+                checkIcon: true,
+                child: Center(
+                  child: Text("Next", style: AppStyle.medium16whiteTest),
+                ),
+                onPressed: () {
+                  userType.changeUserType(selectValue ?? " ");
+                  selectValue != null
+                      ? Navigator.pushNamed(
+                          context, AppRoute.loginScreen /*customerRootScreen*/
+                          )
+                      : isnull = true;
+                  print(userType.userTypeProvider);
+                },
+              ),
+              isnull
+                  ? Center(
+                      child: Text(
+                        "Please Enter Choose User",
+                        style: AppStyle.error16red,
+                      ),
+                    )
+                  : SizedBox()
+            ],
           ),
         ),
       ),
