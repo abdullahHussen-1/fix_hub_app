@@ -6,6 +6,7 @@ import 'package:fix_hub/core/constants/app_style.dart';
 import 'package:fix_hub/provider/provider_user_type.dart';
 import 'package:fix_hub/shared/custem_elevated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 class UserTypeScreen extends StatefulWidget {
@@ -33,7 +34,11 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(AppAssets.logoIsBlue),
+              Image.asset(AppAssets.logoIsBlue)
+                  .animate(
+                      onPlay: (controller) => controller.repeat(reverse: true))
+                  .fade(duration: 6.seconds)
+                  .scale(),
               SizedBox(
                 height: AppMediaQuery.sizeHeight(context) * 0.05,
               ),
