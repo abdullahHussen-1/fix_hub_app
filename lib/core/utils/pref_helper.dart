@@ -1,24 +1,31 @@
-// todo include 3 functions Shared prferences [set tocken -- get tocken -- clear tocken ]
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefHelper {
   static const String _tokenKey = 'auth_token';
+  static const String _roleKey = 'user_role';
 
-  // todo future function use to save tocken
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
   }
 
-  // todo future function use to get tocken
+  static Future<void> saveRole(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_roleKey, role);
+  }
+
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_tokenKey);
   }
 
-  // todo future function use to remove tocken like logout
-  static Future<void> clerToken() async {
+  static Future<String?> getRole() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
+    return prefs.getString(_roleKey);
+  }
+
+  static Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }

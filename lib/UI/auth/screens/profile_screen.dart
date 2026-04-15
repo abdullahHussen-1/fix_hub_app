@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fix_hub/UI/auth/data/auth_repo.dart';
 import 'package:fix_hub/core/constants/app_assets.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_media_query.dart';
@@ -189,9 +190,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(
-                          context, AppRoute.loginScreen);
+                    onTap: () async {
+                      await AuthRepo.logout();
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, AppRoute.loginScreen, (route) => false);
                     },
                     child: CustomText(
                       text: 'Logout',
@@ -212,31 +214,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-/* CircleAvatar(
-                            radius: 100,
-                            backgroundColor: Colors.red,
-                            /*child: selectImage == null
-                                ? Text("data")
-                                : Image.file(
-                                    File(selectImage!.path),
-                                  ),*/
-                            backgroundImage: selectImage == null
-                                ? AssetImage(
-                                    AppAssets.nullImage,
-                                  )
-                                : FileImage(File(selectImage!.path)),
-                          ),*/
-/* CircleAvatar(
-                            radius: 60,
-                            child: ClipOval(
-                              child: selectImage == null
-                                  ? Image.asset(
-                                      AppAssets.nullImage,
-                                      fit: BoxFit.contain,
-                                    )
-                                  : Image.file(
-                                      File(selectImage!.path),
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),*/

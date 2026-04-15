@@ -9,7 +9,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../shared/custem_text_form_field.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
-  ForgetPasswordScreen({super.key});
+  const ForgetPasswordScreen({super.key});
 
   @override
   State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();

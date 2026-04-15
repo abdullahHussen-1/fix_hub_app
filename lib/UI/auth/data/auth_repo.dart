@@ -6,36 +6,42 @@ import 'package:fix_hub/core/network/api_service.dart';
 import 'package:fix_hub/core/utils/pref_helper.dart';
 
 class AuthRepo {
-  ApiService apiService = ApiService();
-  // todo Login Method
-  Future<UserModel> login(String email, String password) async {
+  final ApiService apiService = ApiService();
+
+  /// ✅ Login
+  Future<UserModel> login(String phone, String password) async {
     try {
-      // todo call api service by end point with post method
-      final response = await apiService
-          .post('endPoint', {'email': email, 'password': password});
-      if (response is ApiError) {
-        // todo check if response is ApiError
-        throw response;
-      }
-      // todo check if response is Map<String, dynamic> to detect error
+      final response = await apiService.post('/api/login', {
+        'phone': phone,
+        'password': password,
+      });
+      print("LOGIN RESPONSE => $response");
+      if (response is ApiError) throw response;
+
       if (response is Map<String, dynamic>) {
-        final msg = response['message'];
-        final code = response['code'];
-        final coder = int.parse(code);
+        final success = response['success'];
+        final message = response['message'];
         final data = response['data'];
-        if (coder != 200 && coder != 201 && data == null) {
-          // todo check if status code is not 200 to throw error msg
-          throw ApiError(message: msg ?? 'UnExpected Error');
+
+        if (success == false || data == null) {
+          throw ApiError(message: message ?? 'Login failed');
         }
-        // todo if statues code is 200 and data is not null create user model from data
-        final user = UserModel.fromJson(response['data']);
-        if (user.tocken != null) {
-          // todo if tocken is not null save it to local storage
-          await PrefHelper.saveToken(user.tocken!);
+
+        final user = UserModel.fromJson({
+          ...data['user'],
+          'token': data['token'],
+        });
+        if (user.token != null) {
+          await PrefHelper.saveToken(user.token!);
         }
+
+        if (user.role != null) {
+          await PrefHelper.saveRole(user.role!);
+        }
+
         return user;
       } else {
-        throw ApiError(message: 'UnExpected Error from server');
+        throw ApiError(message: 'Unexpected response');
       }
     } on DioException catch (e) {
       throw ApiExceptions.handleError(e);
@@ -44,50 +50,81 @@ class AuthRepo {
     }
   }
 
-  // todo Register Method
-  Future<UserModel?> register(
-      String name,
-      String phone,
-      String nationalId,
-      String city,
-      String address,
-      String specialty,
-      String password,
-      String confrimPassword) async {
+  // ✅ Register
+  Future<UserModel> register({
+    required bool isTechnical,
+    required String name,
+    required String phone,
+    required String nationalId,
+    required String city,
+    String? address,
+    String? specialty,
+    required String password,
+    required String confirmPassword,
+  }) async {
     try {
-      // todo call api service by end point with post method
-      final response = await apiService.post('endPoint', {
+      final endpoint =
+          isTechnical ? '/api/register/technical' : '/api/register/normal';
+
+      final body = {
         'name': name,
         'phone': phone,
-        'nationalId': nationalId,
+        'national_id': nationalId,
         'city': city,
-        'address': address,
-        'specialty': specialty,
         'password': password,
-        'confrimPassword': confrimPassword,
-      });
-      if (response is ApiError) {
-        throw response;
+        'password_confirmation': confirmPassword,
+      };
+
+      if (isTechnical) {
+        body['profession'] = specialty!;
+      } else {
+        body['address'] = address!;
       }
+
+      final response = await apiService.post(endpoint, body);
+
+      /// 🔥 debug
+      print("REGISTER RESPONSE => $response");
+
+      if (response is ApiError) throw response;
+
       if (response is Map<String, dynamic>) {
-        final msg = response['message'];
-        final code = response['code'];
-        final coder = int.parse(code);
+        final success = response['success'];
+        final message = response['message'];
         final data = response['data'];
-        if (coder != 200 && coder != 201 && data == null) {
-          // todo check if status code is not 200 to throw error msg
-          throw ApiError(message: msg ?? 'UnExpected Error');
+
+        if (success == false || data == null) {
+          throw ApiError(message: message ?? 'Register failed');
         }
-        final user = UserModel.fromJson(data);
-        if (user.tocken != null) {
-          await PrefHelper.saveToken(user.tocken!);
+
+        final userMap = Map<String, dynamic>.from(data['user']);
+
+        final user = UserModel.fromJson({
+          ...userMap,
+          'token': data['token'],
+        });
+
+        if (user.token != null) {
+          await PrefHelper.saveToken(user.token!);
         }
+
+        if (user.role != null) {
+          await PrefHelper.saveRole(user.role!);
+        }
+
         return user;
       } else {
-        throw ApiError(message: 'UnExpected Error from server');
+        throw ApiError(message: 'Unexpected response');
       }
-    } on DioException catch (e) {
-      throw ApiExceptions.handleError(e);
+    } catch (e) {
+      throw ApiError(message: e.toString());
+    }
+  }
+  // ✅ Logout clears token and role from shared preferences
+static  Future<void> logout() async {
+    try {
+      ///todo remove token + role from shared preferences
+      await PrefHelper.clearAll();
     } catch (e) {
       throw ApiError(message: e.toString());
     }

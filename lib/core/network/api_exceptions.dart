@@ -5,8 +5,8 @@ class ApiExceptions {
   static ApiError handleError(DioException error) {
     final statusCode = error.response?.statusCode;
     final data = error.response?.data;
-    if(data is Map<String,dynamic>&&data["message"]!=null){
-      return ApiError(message: data["message"],statusCode: statusCode);
+    if (data != null && data['message'] != null) {
+      return ApiError(message: data['message']);
     }
     switch (error.type) {
       case DioExceptionType.connectionTimeout:

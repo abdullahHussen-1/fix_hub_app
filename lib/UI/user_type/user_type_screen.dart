@@ -23,6 +23,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
   @override
   Widget build(BuildContext context) {
     var userType = Provider.of<ProviderUserType>(context);
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -34,21 +35,28 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              ///todo animated logo
               Image.asset(AppAssets.logoIsBlue)
                   .animate(
                       onPlay: (controller) => controller.repeat(reverse: true))
                   .fade(duration: 6.seconds)
                   .scale(),
+
               SizedBox(
                 height: AppMediaQuery.sizeHeight(context) * 0.05,
               ),
+
+              ///todo title
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: AppMediaQuery.sizeWidth(context) * 0.04,
                 ),
                 child: Text("Select Role:", style: AppStyle.bold16blackTest),
               ),
+
               SizedBox(height: AppMediaQuery.sizeHeight(context) * 0.02),
+
+              ///todo dropdown
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: AppMediaQuery.sizeWidth(context) * 0.1,
@@ -80,10 +88,15 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                   onChanged: (value) {
                     setState(() {
                       selectValue = value;
+                      isnull = false;
                     });
                   },
                 ),
               ),
+
+              SizedBox(height: AppMediaQuery.sizeHeight(context) * 0.03),
+
+              ///todo button
               CustemElevatedButton(
                 text: "",
                 backGroundColor: AppColors.primaryButtonColor,
@@ -92,23 +105,35 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                   child: Text("Next", style: AppStyle.medium16whiteTest),
                 ),
                 onPressed: () {
-                  userType.changeUserType(selectValue ?? " ");
-                  selectValue != null
-                      ? Navigator.pushNamed(
-                          context, AppRoute.loginScreen /*customerRootScreen*/
-                          )
-                      : isnull = true;
+                  if (selectValue == null) {
+                    setState(() {
+                      isnull = true;
+                    });
+                    return;
+                  }
+
+                  ///todo save user type in provider
+                  userType.changeUserType(selectValue!);
+
+                  ///todo navigate to register screen
+                  Navigator.pushNamed(context, AppRoute.registerScreen);
+
                   print(userType.userTypeProvider);
                 },
               ),
+
+              ///todo error message
               isnull
                   ? Center(
-                      child: Text(
-                        "Please Enter Choose User",
-                        style: AppStyle.error16red,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          "Please Choose User",
+                          style: AppStyle.error16red,
+                        ),
                       ),
                     )
-                  : SizedBox()
+                  : SizedBox(),
             ],
           ),
         ),

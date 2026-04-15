@@ -3,7 +3,7 @@ import 'package:fix_hub/core/utils/pref_helper.dart';
 
 class DioClient {
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: "https://mock.fixhub.com/api/",
+    baseUrl: "https://web-production-82531.up.railway.app",
     headers: {
       'Content-Type': 'application/json',
     },

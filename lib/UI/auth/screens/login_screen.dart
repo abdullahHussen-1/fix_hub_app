@@ -56,8 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 120,
                   )
                       .animate(
-                      onPlay: (controller) =>
-                          controller.repeat(reverse: true))
+                          onPlay: (controller) =>
+                              controller.repeat(reverse: true))
                       .fade(duration: 6.seconds)
                       .scale(),
                 ),
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: SizedBox(
-                      width: AppMediaQuery.sizeWidth(context) - 40,
+                      width: AppMediaQuery.sizeWidth(context) - 20,
                       child: Form(
                         key: _formkey,
                         child: Column(
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 keyboardType: TextInputType.phone,
                                 text: 'Enter Phone Number',
                                 borderSideColor:
-                                AppColors.primaryBackgroundBlue,
+                                    AppColors.primaryBackgroundBlue,
                                 controller: phoneController,
                                 validator: (vale) {
                                   if (vale!.isEmpty) {
@@ -119,26 +119,25 @@ class _LoginScreenState extends State<LoginScreen> {
                             Center(
                               child: isLoading
                                   ? CupertinoActivityIndicator(
-                                  color: AppColors.primaryBackgroundBlue)
+                                      color: AppColors.primaryBackgroundBlue)
                                   : CustemElevatedButton(
-                                heightContainer: 50,
-                                widthContainer: double.infinity,
-                                onPressed: () {
-                                  login();
-                                },
-                                text: 'Login',
-                                backGroundColor: AppColors.blackColor,
-                                checkIcon: false,
-                              ),
+                                      heightContainer: 50,
+                                      widthContainer: double.infinity,
+                                      onPressed: () {
+                                        login();
+                                      },
+                                      text: 'Login',
+                                      backGroundColor: AppColors.blackColor,
+                                      checkIcon: false,
+                                    ),
                             ),
                             const Gap(10),
                             Center(
                               child: GestureDetector(
-                                onTap: () =>
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      AppRoute.registerScreen,
-                                    ),
+                                onTap: () => Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoute.userTypeScreen,
+                                ),
                                 child: CustomText(
                                   text: 'Sign Up',
                                   fontsize: 15,
@@ -169,10 +168,11 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         final user = await authRepo.login(
             phoneController.text.trim(), passController.text);
-
-        if (user != null && user.role == 'Customer') {
-          Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
-        } else if (user != null && user.role == 'craftman') {
+        if (user.role == 'technical') {
+          Navigator.pushReplacementNamed(context, AppRoute.craftManRootScreen);
+          print(user.role);
+          print(user.name);
+        } else {
           Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);
           setState(() {
             isLoading = false;
