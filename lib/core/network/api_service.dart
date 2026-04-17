@@ -36,19 +36,6 @@ class ApiService {
     }
   }
 
-  Future<dynamic> put2(String endpoint, {dynamic data}) async {
-    try {
-      final response = await _dioClient.dio.put(
-        endpoint,
-        data: data,
-      );
-
-      return response.data;
-    } on DioError catch (error) {
-      return ApiExceptions.handleError(error);
-    }
-  }
-
 // todo delete
   Future<dynamic> delete(String endPoint, Map<String, dynamic> body) async {
     try {
