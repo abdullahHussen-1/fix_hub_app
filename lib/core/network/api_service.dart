@@ -4,41 +4,58 @@ import 'package:fix_hub/core/network/dio_client.dart';
 
 class ApiService {
   final DioClient _dioClient = DioClient();
+
   // todo CRUD METHODS///////
   // todo Get
   Future<dynamic> get(String endPoint) async {
     try {
       final response = await _dioClient.dio.get(endPoint);
       return response.data;
-    } on DioException catch (error) {
-      throw ApiExceptions.handleError(error);
+    } on DioError catch (error) {
+      return ApiExceptions.handleError(error);
     }
   }
+
 // todo post
   Future<dynamic> post(String endPoint, Map<String, dynamic> body) async {
     try {
       final response = await _dioClient.dio.post(endPoint, data: body);
       return response.data;
-    } on DioException catch (error) {
-      throw ApiExceptions.handleError(error);
+    } on DioError catch (error) {
+      return ApiExceptions.handleError(error);
     }
   }
+
 // todo put / Updata
   Future<dynamic> put(String endPoint, Map<String, dynamic> body) async {
     try {
       final response = await _dioClient.dio.put(endPoint, data: body);
       return response.data;
-    } on DioException catch (error) {
-      throw ApiExceptions.handleError(error);
+    } on DioError catch (error) {
+      return ApiExceptions.handleError(error);
     }
   }
+
+  Future<dynamic> put2(String endpoint, {dynamic data}) async {
+    try {
+      final response = await _dioClient.dio.put(
+        endpoint,
+        data: data,
+      );
+
+      return response.data;
+    } on DioError catch (error) {
+      return ApiExceptions.handleError(error);
+    }
+  }
+
 // todo delete
   Future<dynamic> delete(String endPoint, Map<String, dynamic> body) async {
     try {
       final response = await _dioClient.dio.delete(endPoint, data: body);
       return response.data;
-    } on DioException catch (error) {
-      throw ApiExceptions.handleError(error);
+    } on DioError catch (error) {
+      return ApiExceptions.handleError(error);
     }
   }
 }

@@ -12,26 +12,29 @@ class CustemTextFormField extends StatefulWidget {
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
   final bool obscureText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final int maxLines;
   final Function(String)? onChange;
   final String? Function(String?)? validator;
+  final FocusNode? focusNode;
+  final bool readOnly;
 
-  const CustemTextFormField({
-    super.key,
-    this.text,
-    required this.borderSideColor,
-    this.hintStyleText,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.styleText,
-    this.keyboardType = TextInputType.text,
-    this.obscureText = false,
-    required this.controller,
-    this.maxLines = 1,
-    this.onChange,
-    this.validator,
-  });
+  const CustemTextFormField(
+      {super.key,
+      this.text,
+      required this.borderSideColor,
+      this.hintStyleText,
+      this.prefixIcon,
+      this.suffixIcon,
+      this.styleText,
+      this.keyboardType = TextInputType.text,
+      this.obscureText = false,
+      this.controller,
+      this.maxLines = 1,
+      this.onChange,
+      this.validator,
+      this.focusNode,
+      this.readOnly = false});
 
   @override
   State<CustemTextFormField> createState() => _CustemTextFormFieldState();
@@ -55,15 +58,18 @@ class _CustemTextFormFieldState extends State<CustemTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: widget.readOnly,
+      focusNode: widget.focusNode,
       keyboardType: widget.keyboardType,
       obscureText: _obscureText,
       controller: widget.controller,
       maxLines: widget.maxLines,
       style: widget.styleText ?? const TextStyle(fontSize: 14),
       decoration: InputDecoration(
-        isDense: true, //  بيخلي الحقل ملموم وأبسط
-        contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 12), 
+        isDense: true,
+        //  بيخلي الحقل ملموم وأبسط
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         enabledBorder:
             outlineInputBorderItem(colorBorder: widget.borderSideColor),
         focusedBorder: outlineInputBorderItem(

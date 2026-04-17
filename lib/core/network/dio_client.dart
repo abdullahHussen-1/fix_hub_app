@@ -8,6 +8,7 @@ class DioClient {
       'Content-Type': 'application/json',
     },
   ));
+
   DioClient() {
     _dio.interceptors.add(
       InterceptorsWrapper(
@@ -23,6 +24,7 @@ class DioClient {
       ),
     );
   }
+
   // todo get funcions to acces class
   Dio get dio => _dio;
 }

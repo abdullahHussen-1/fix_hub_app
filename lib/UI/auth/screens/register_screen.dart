@@ -78,10 +78,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const Gap(20),
                 Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: SizedBox(
-                      width: AppMediaQuery.sizeWidth(context) - 10,
+                  child: SizedBox(
+                    width: AppMediaQuery.sizeWidth(context) - 10,
+                    child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
                         child: Column(

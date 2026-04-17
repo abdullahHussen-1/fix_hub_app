@@ -8,7 +8,7 @@ import 'package:fix_hub/core/utils/pref_helper.dart';
 class AuthRepo {
   final ApiService apiService = ApiService();
 
-  /// ✅ Login
+  //todo=> login
   Future<UserModel> login(String phone, String password) async {
     try {
       final response = await apiService.post('/api/login', {
@@ -50,7 +50,7 @@ class AuthRepo {
     }
   }
 
-  // ✅ Register
+  // todo=> Register
   Future<UserModel> register({
     required bool isTechnical,
     required String name,
@@ -83,7 +83,7 @@ class AuthRepo {
 
       final response = await apiService.post(endpoint, body);
 
-      /// 🔥 debug
+      /// todo=> debug
       print("REGISTER RESPONSE => $response");
 
       if (response is ApiError) throw response;
@@ -120,8 +120,9 @@ class AuthRepo {
       throw ApiError(message: e.toString());
     }
   }
-  // ✅ Logout clears token and role from shared preferences
-static  Future<void> logout() async {
+
+  // todo=> Logout clears token and role from shared preferences
+  static Future<void> logout() async {
     try {
       ///todo remove token + role from shared preferences
       await PrefHelper.clearAll();
@@ -129,4 +130,128 @@ static  Future<void> logout() async {
       throw ApiError(message: e.toString());
     }
   }
+
+  //todo=> get profile
+  Future<UserModel> getProfile() async {
+    try {
+      final endpoint = '/api/profile';
+
+      final response = await apiService.get(endpoint);
+
+      /// todo=> debug
+      print("PROFILE RESPONSE => $response");
+
+      if (response is ApiError) throw response;
+
+      if (response is Map<String, dynamic>) {
+        final success = response['success'];
+        final message = response['message'];
+        final data = response['data'];
+
+        if (success == false || data == null) {
+          throw ApiError(message: message ?? 'Get profile failed');
+        }
+
+        final userMap = Map<String, dynamic>.from(data);
+
+        // final user = UserModel.fromJson(userMap);
+        final user = UserModel.fromJson({
+          ...userMap,
+          'token': data['token'],
+        });
+
+        if (user.token != null) {
+          await PrefHelper.saveToken(user.token!);
+        }
+
+        if (user.role != null) {
+          await PrefHelper.saveRole(user.role!);
+        }
+        return user;
+      } else {
+        throw ApiError(message: 'Unexpected response');
+      }
+    } catch (e) {
+      throw ApiError(message: e.toString());
+    }
+  }
+
+  //todo=> update profile
+  Future<UserModel> updateProfile(Map<String, dynamic> body) async {
+    try {
+      final endpoint = '/api/profile/update';
+
+      final response = await apiService.put(endpoint, body);
+
+      /// todo=> debug
+      print("UPDATE PROFILE RESPONSE => $response");
+
+      if (response is ApiError) throw response;
+
+      if (response is Map<String, dynamic>) {
+        final success = response['success'];
+        final message = response['message'];
+
+        if (success == false) {
+          throw ApiError(message: message ?? 'Update profile failed');
+        }
+
+        /// 🔥 أهم جزء: نعمل refresh للبروفايل بعد التحديث
+        final updatedUser = await getProfile();
+
+        return updatedUser;
+      } else {
+        throw ApiError(message: 'Unexpected response');
+      }
+    } catch (e) {
+      throw ApiError(message: e.toString());
+    }
+  }
+
+//todo=> update profile
+/*Future<UserModel> updateProfile(
+    Map<String, dynamic> body,
+    File? image,
+  ) async {
+    try {
+      final endpoint = '/api/profile/update';
+
+      /// 🧠 نحول البيانات لـ FormData
+      final formData = FormData.fromMap({
+        ...body,
+
+        /// 🔥 لو فيه صورة بس
+        if (image != null)
+          "image": await MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+      });
+
+      final response = await apiService.put2(endpoint, data: formData);
+
+      /// todo=> debug
+      print("UPDATE RESPONSE => $response");
+
+      if (response is ApiError) throw response;
+
+      if (response is Map<String, dynamic>) {
+        final success = response['success'];
+        final message = response['message'];
+        final data = response['data'];
+
+        if (success == false || data == null) {
+          throw ApiError(message: message ?? 'Update profile failed');
+        }
+
+        return UserModel.fromJson(
+          Map<String, dynamic>.from(data),
+        );
+      } else {
+        throw ApiError(message: 'Unexpected response');
+      }
+    } catch (e) {
+      throw ApiError(message: e.toString());
+    }
+  }*/
 }

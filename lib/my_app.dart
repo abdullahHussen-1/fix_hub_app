@@ -9,6 +9,7 @@ import 'package:fix_hub/UI/forgetPassword/screen/forget_password_screen.dart';
 import 'package:fix_hub/UI/home/screens/category_screen.dart';
 import 'package:fix_hub/UI/home/screens/craftsMansList_screen.dart';
 import 'package:fix_hub/UI/home/screens/craftsMans_details.dart';
+import 'package:fix_hub/UI/splash/splash_screen.dart';
 import 'package:fix_hub/UI/tasks/tasks_screen.dart';
 import 'package:fix_hub/UI/user_type/user_type_screen.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
@@ -16,8 +17,6 @@ import 'package:fix_hub/core/constants/app_them.dart';
 import 'package:fix_hub/craftsmans_root.dart';
 import 'package:fix_hub/customer_root.dart';
 import 'package:flutter/material.dart';
-
-import '../UI/splash/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,7 +30,8 @@ class MyApp extends StatelessWidget {
         theme: AppThem.themeData,
         initialRoute: AppRoute.splashScreen,
         routes: {
-          AppRoute.splashScreen: (context) => SplashScreen(),
+          AppRoute.splashScreen: (context) =>
+              /*ProfileScreen()*/ SplashScreen(),
           AppRoute.userTypeScreen: (context) => UserTypeScreen(),
           AppRoute.loginScreen: (context) => LoginScreen(),
           AppRoute.registerScreen: (context) => RegisterScreen(),
