@@ -1,3 +1,4 @@
+import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
 import 'package:fix_hub/shared/custom_text.dart';
@@ -5,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class ContactButtons extends StatelessWidget {
-  const ContactButtons({super.key});
+  final Technician tech;
+
+  const ContactButtons({super.key, required this.tech});
 
   @override
   Widget build(BuildContext context) {
@@ -14,67 +17,106 @@ class ContactButtons extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
+                  /// 💬 Chat
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: AppColors.lightBlueBorder),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // تقدر تربطها بشات بعدين
+                      },
                       icon: Icon(Icons.chat_bubble_outline,
-                          color: AppColors.primaryBackgroundBlue, size: 24),
+                          color: AppColors.primaryBackgroundBlue),
                     ),
                   ),
-                  Gap(8),
+
+                  const Gap(8),
+
+                  /// 📞 Call
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: AppColors.lightBlueBorder),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        /// مؤقت: اطبع الرقم
+                        print("Call: ${tech.phone}");
+
+                        /// لو عايز بعدين:
+                        /// launch("tel:${tech.phone}");
+                      },
                       icon: Icon(Icons.call,
-                          color: AppColors.primaryBackgroundBlue, size: 24),
+                          color: AppColors.primaryBackgroundBlue),
                     ),
                   ),
                 ],
               ),
+
+              /// 🛠 Add Request
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoute.addRequestScreen);
+                  Navigator.pushNamed(
+                    context,
+                    AppRoute.addRequestScreen,
+                    arguments: tech, // 👈 مهم
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryButtonColor,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-                child: CustomText(
+                child: const CustomText(
                   text: 'Add Request',
                   fontWeight: FontWeight.bold,
                   fontsize: 14,
-                  color: AppColors.primaryBackgroundWhite,
+                  color: Colors.white,
                 ),
               ),
             ],
           ),
-          Gap(10),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, AppRoute.addReviewScreen);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryButtonColor,
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-            ),
-            child: CustomText(
-              text: 'Add Review',
-              fontWeight: FontWeight.bold,
-              fontsize: 14,
-              color: AppColors.primaryBackgroundWhite,
+
+          const Gap(12),
+
+          /// ⭐ Add Review
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                final result = await Navigator.pushNamed(
+                  context,
+                  AppRoute.addReviewScreen,
+                  arguments: tech, // 👈 مهم
+                );
+
+                if (result == true) {
+                  // 👈 عشان نعمل refresh
+                  (context as Element).markNeedsBuild();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBackgroundBlue,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const CustomText(
+                text: 'Add Review',
+                fontWeight: FontWeight.bold,
+                fontsize: 15,
+                color: Colors.white,
+              ),
             ),
           ),
         ],

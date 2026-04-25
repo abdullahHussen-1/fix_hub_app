@@ -1,10 +1,14 @@
+import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
+import 'package:fix_hub/UI/tasks/data/task_model.dart';
+import 'package:fix_hub/core/utils/pref_helper.dart';
+import 'package:fix_hub/shared/custom_snackBar.dart';
+import 'package:flutter/material.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
-import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/shared/custem_text_form_field.dart';
 import 'package:fix_hub/shared/custom_appBar.dart';
 import 'package:fix_hub/shared/custom_label_text.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart'; // تأكد من إضافة intl في pubspec.yaml
 
 class AddrequestScreen extends StatefulWidget {
   const AddrequestScreen({super.key});
@@ -15,13 +19,42 @@ class AddrequestScreen extends StatefulWidget {
 class _AddrequestScreenState extends State<AddrequestScreen> {
   final typeOfServiceController = TextEditingController();
   final problemDescriptionController = TextEditingController();
-  final addphotosController = TextEditingController();
   final dateController = TextEditingController();
   final timeController = TextEditingController();
   final addressController = TextEditingController();
 
+  // دالة اختيار التاريخ
+  Future<void> _selectDate() async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null) {
+      setState(() {
+        dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
+  // دالة اختيار الوقت
+  Future<void> _selectTime() async {
+    TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        timeController.text = picked.format(context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final tech = ModalRoute.of(context)!.settings.arguments as Technician;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -31,118 +64,118 @@ class _AddrequestScreenState extends State<AddrequestScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
+                // داخل CustomAppbar في صفحة AddrequestScreen
                 CustomAppbar(
-                  onTap: () {},
-                  text: 'Confirmation',
-                )
-                    .animate()
-                    .fade(duration: 400.ms)
-                    .slideY(begin: -0.5, curve: Curves.easeOut),
+                  onTap: () async {
+                    if (problemDescriptionController.text.isEmpty ||
+                        dateController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          customSnackBar("Please fill all fields"));
+                      return;
+                    }
+
+                    final task = TaskModel(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      technicianId: tech.id,
+                      userName: await PrefHelper.getUserName() ?? "Client",
+                      userImage: "",
+                      typeOfService: tech.specialty,
+                      description: problemDescriptionController.text,
+                      date: dateController.text,
+                      time: timeController.text,
+                      address: addressController.text,
+                    );
+
+                    await PrefHelper.saveTask(task);
+
+                    // إظهار الرسالة بنجاح
+                    ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+                        "Request sent to ${tech.name} successfully!"));
+
+                    Navigator.pop(context);
+                  },
+                  text: 'Confirm Request',
+                ).animate().fade().slideY(begin: -0.5),
                 const SizedBox(height: 20),
                 Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.topCenter,
-                    child: SizedBox(
-                      width: AppMediaQuery.sizeWidth(context) - 40, //
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const CustomLabelText(text: 'Type of service'),
-                          const SizedBox(height: 5),
-                          CustemTextFormField(
-                            controller: typeOfServiceController,
-                            borderSideColor: AppColors.primaryBackgroundBlue,
-                            suffixIcon: const Icon(Icons.arrow_drop_down,
-                                color: AppColors.primaryBackgroundBlue,
-                                size: 30),
-                          ),
-                          const SizedBox(height: 15),
-                          const CustomLabelText(text: 'Problem description'),
-                          const SizedBox(height: 5),
-                          CustemTextFormField(
-                            controller: problemDescriptionController,
-                            borderSideColor: AppColors.primaryBackgroundBlue,
-                            maxLines: 4,
-                          ),
-                          const SizedBox(height: 15),
-                          const CustomLabelText(text: 'Add photos / videos'),
-                          const SizedBox(height: 5),
-                          CustemTextFormField(
-                            controller: addphotosController,
-                            borderSideColor: AppColors.primaryBackgroundBlue,
-                            suffixIcon: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.videocam,
-                                    color: Color(0xFF2E3D4D), size: 28),
-                                const SizedBox(width: 8),
-                                const Icon(Icons.camera_alt,
-                                    color: Color(0xFF2E3D4D), size: 24),
-                                const SizedBox(width: 15),
-                              ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomLabelText(text: 'Problem description'),
+                        const SizedBox(height: 5),
+                        CustemTextFormField(
+                          controller: problemDescriptionController,
+                          borderSideColor: AppColors.primaryBackgroundBlue,
+                          text: "Describe the issue...",
+                          maxLines: 3,
+                        ),
+                        const SizedBox(height: 15),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const CustomLabelText(text: 'Date'),
+                                  const SizedBox(height: 5),
+                                  GestureDetector(
+                                    onTap: _selectDate,
+                                    child: AbsorbPointer(
+                                      child: CustemTextFormField(
+                                        controller: dateController,
+                                        text: 'Select Date',
+                                        prefixIcon: const Icon(
+                                            Icons.calendar_month,
+                                            color: AppColors
+                                                .primaryBackgroundBlue),
+                                        borderSideColor:
+                                            AppColors.primaryBackgroundBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const CustomLabelText(text: 'The date'),
-                                    const SizedBox(height: 5),
-                                    CustemTextFormField(
-                                      controller: dateController,
-                                      borderSideColor:
-                                          AppColors.primaryBackgroundBlue,
-                                      text: '2023-08-18',
-                                      prefixIcon: const Icon(
-                                          Icons.arrow_drop_down,
-                                          color:
-                                              AppColors.primaryBackgroundBlue),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const CustomLabelText(text: 'Time'),
+                                  const SizedBox(height: 5),
+                                  GestureDetector(
+                                    onTap: _selectTime,
+                                    child: AbsorbPointer(
+                                      child: CustemTextFormField(
+                                        controller: timeController,
+                                        text: 'Select Time',
+                                        prefixIcon: const Icon(
+                                            Icons.access_time_filled,
+                                            color: AppColors
+                                                .primaryBackgroundBlue),
+                                        borderSideColor:
+                                            AppColors.primaryBackgroundBlue,
+                                      ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 15),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const CustomLabelText(text: 'The time'),
-                                    const SizedBox(height: 5),
-                                    CustemTextFormField(
-                                      controller: timeController,
-                                      borderSideColor:
-                                          AppColors.primaryBackgroundBlue,
-                                      text: '06:48 AM',
-                                      prefixIcon: const Icon(
-                                          Icons.arrow_drop_down,
-                                          color:
-                                              AppColors.primaryBackgroundBlue),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          const CustomLabelText(text: 'The address'),
-                          const SizedBox(height: 5),
-                          CustemTextFormField(
-                            controller: addressController,
-                            borderSideColor: AppColors.primaryBackgroundBlue,
-                            suffixIcon: const Icon(Icons.location_on,
-                                color: Color(0xFF2E3D4D)),
-                          ),
-                          const SizedBox(height: 30),
-                        ]
-                            .animate(interval: 40.ms)
-                            .fade(duration: 400.ms)
-                            .slideX(begin: 0.05, curve: Curves.easeOut),
-                      ),
-                    ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15),
+                        const CustomLabelText(text: 'Work Address'),
+                        const SizedBox(height: 5),
+                        CustemTextFormField(
+                          controller: addressController,
+                          borderSideColor: AppColors.primaryBackgroundBlue,
+                          text: "Street, City...",
+                          suffixIcon: const Icon(Icons.location_on,
+                              color: AppColors.primaryBackgroundBlue),
+                        ),
+                      ],
+                    ).animate().fade().slideX(begin: 0.1),
                   ),
                 ),
               ],

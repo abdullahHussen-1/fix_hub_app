@@ -33,27 +33,23 @@ class CategoryScreen extends StatelessWidget {
       'title': 'Cleaning',
       'icon': Icons.cleaning_services_rounded,
     },
-    {
-      'title': 'Medical care',
-      'icon': Icons.medical_services,
-    },
-    {
-      'title': 'Mechnician',
-      'icon': Icons.car_repair_rounded,
-    },
-    {
-      'title': 'Medical care',
-      'icon': Icons.medical_services,
-    },
-    {
-      'title': 'Programmer',
-      'icon': Icons.computer_rounded,
-    },
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.primaryBackgroundWhite,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 80.0),
+          child: FloatingActionButton(
+            backgroundColor: AppColors.primaryBackgroundBlue,
+            child: const Icon(Icons.psychology,
+                color: Colors.white, size: 30), // أيقونة بالذكاء الاصطناعي
+            onPressed: () {
+              Navigator.pushNamed(context,
+                  AppRoute.aiChatScreen);
+            },
+          ).animate().scale(delay: 1.seconds, duration: 500.ms),
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20),

@@ -1,46 +1,62 @@
+// lib/UI/home/screens/subscreens/reviews_tab.dart
+
+import 'package:fix_hub/UI/addReview/data/reviewModel.dart';
+import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart'; // تأكد من استيراد الموديل
 import 'package:fix_hub/UI/home/widgets/custom_review_card.dart';
+import 'package:fix_hub/core/utils/pref_helper.dart';
 import 'package:flutter/material.dart';
 
-class ReviewsTab extends StatelessWidget {
+class ReviewsTab extends StatefulWidget {
   const ReviewsTab({super.key});
 
   @override
+  State<ReviewsTab> createState() => _ReviewsTabState();
+}
+
+class _ReviewsTabState extends State<ReviewsTab> {
+  List<ReviewModel> reviews = [];
+  bool isLoading = true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // الحصول على بيانات الفني من الصفحة الأب (CraftsMansDetails)
+    final tech = ModalRoute.of(context)!.settings.arguments as Technician;
+    loadReviews(tech.id);
+  }
+
+  Future<void> loadReviews(String techId) async {
+    // استخدام الدالة التي قمت بإنشائها مسبقاً في PrefHelper
+    final data = await PrefHelper.getReviewsByTech(techId);
+    setState(() {
+      reviews = data;
+      isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // todo قائمة تجريبية للتقييمات 
-    final reviews = [
-      {
-        'user': 'Sara Ali',
-        'rating': 5.0,
-        'date': '2 Days ago',
-        'text':
-            'Excellent camera installation service! Very professional and clean. Highly recommended.'
-      },
-      {
-        'user': 'Mohamed Khan',
-        'rating': 4.5,
-        'date': '1 Week ago',
-        'text':
-            'The graphic design work was fantastic. Delivered on time and met all my requirements. Great work.'
-      },
-      {
-        'user': 'Jane Doe',
-        'rating': 5.0,
-        'date': '2 Weeks ago',
-        'text':
-            'He is punctual and very skilled in his work. Good handling and fair prices.'
-      },
-    ];
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (reviews.isEmpty) {
+      return const Center(
+        child: Text("No reviews for this technician yet."),
+      );
+    }
 
     return ListView.builder(
+      padding: const EdgeInsets.only(top: 10),
       itemCount: reviews.length,
-      padding: const EdgeInsets.only(top: 8),
       itemBuilder: (context, index) {
         final review = reviews[index];
+
         return ReviewCard(
-          userName: review['user'] as String,
-          rating: review['rating'] as double,
-          date: review['date'] as String,
-          reviewText: review['text'] as String,
+          userName: review.userName,
+          rating: review.rating,
+          date: review.date,
+          reviewText: review.comment,
         );
       },
     );

@@ -1,11 +1,13 @@
-import 'package:fix_hub/core/constants/app_assets.dart';
+import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class CustomHeaderCraftsman extends StatelessWidget {
-  const CustomHeaderCraftsman({super.key});
+  final Technician tech;
+
+  const CustomHeaderCraftsman({super.key, required this.tech});
 
   @override
   Widget build(BuildContext context) {
@@ -13,28 +15,33 @@ class CustomHeaderCraftsman extends StatelessWidget {
       children: [
         const CircleAvatar(
           radius: 50,
-          backgroundImage:
-              AssetImage(AppAssets.logoIsWhite), // مثال لصورة بروفايل
-          backgroundColor: AppColors.primaryBackgroundBlue, // لجعلها بدون إطار
+          backgroundColor: AppColors.primaryBackgroundBlue,
+          child: Icon(Icons.person, size: 50, color: Colors.white),
         ),
         Gap(8),
-        const CustomText(
-            text: 'Amir',
-            fontsize: 22,
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryBackgroundBlue),
+
+        ///  الاسم الحقيقي
+        CustomText(
+          text: tech.name,
+          fontsize: 22,
+          fontWeight: FontWeight.bold,
+          color: AppColors.lightGreyBlue,
+        ),
+
         const Gap(4),
-        // todo التقييم الرقمي والنجمة
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CustomText(
-                text: '0.0',
-                fontsize: 16,
-                fontWeight: FontWeight.w500,
-                color: AppColors.primaryButtonColor),
+          children: [
+            Icon(Icons.location_on,
+                size: 18, color: AppColors.primaryButtonColor),
             Gap(4),
-            Icon(Icons.star, color: AppColors.primaryBackgroundBlue, size: 20),
+            CustomText(
+              text: tech.city,
+              fontsize: 14,
+              fontWeight: FontWeight.w400,
+              color: AppColors.lightGreyBlue,
+            ),
           ],
         ),
       ],

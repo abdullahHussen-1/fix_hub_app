@@ -1,6 +1,7 @@
 //import 'package:fix_hub/UI/auth/screens/forgot_password_screen.dart';
 import 'package:fix_hub/UI/addRequest/addRequest_screen.dart';
 import 'package:fix_hub/UI/addReview/addReview_screen.dart';
+import 'package:fix_hub/UI/aiChat/aiChatScreen.dart';
 import 'package:fix_hub/UI/auth/screens/login_screen.dart';
 import 'package:fix_hub/UI/auth/screens/profile_screen.dart';
 import 'package:fix_hub/UI/auth/screens/register_screen.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           AppRoute.craftsMansDetailsScreen: (context) => CraftsMansDetails(),
           AppRoute.addRequestScreen: (context) => AddrequestScreen(),
           AppRoute.addReviewScreen: (context) => AddreviewScreen(),
+          AppRoute.aiChatScreen: (context) => AIChatScreen(),
         },
       ),
     );

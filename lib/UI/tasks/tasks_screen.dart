@@ -1,12 +1,11 @@
-import 'package:fix_hub/core/constants/app_colors.dart';
+// lib/UI/tasks/tasks_screen.dart
 import 'package:fix_hub/core/constants/app_route.dart';
+import 'package:fix_hub/core/utils/pref_helper.dart';
+import 'package:fix_hub/shared/custom_snackBar.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/material.dart';
-
-import '../../core/network/api_error.dart';
 import '../../shared/custom_appBar.dart';
 import 'data/task_model.dart';
-import 'data/task_repo.dart';
 import 'widgets/custom_task_widget.dart';
 
 class TasksScreen extends StatefulWidget {
@@ -16,11 +15,11 @@ class TasksScreen extends StatefulWidget {
   State<TasksScreen> createState() => _TasksScreenState();
 }
 
-class _TasksScreenState extends State<TasksScreen> {
-  final TaskRepo repo = TaskRepo();
+// lib/UI/tasks/tasks_screen.dart
 
+class _TasksScreenState extends State<TasksScreen> {
   List<TaskModel> tasks = [];
-  bool isLoading = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -30,52 +29,72 @@ class _TasksScreenState extends State<TasksScreen> {
 
   Future<void> fetchTasks() async {
     setState(() => isLoading = true);
-
-    try {
-      tasks = await repo.getTasks();
-    } catch (e) {
-      String msg = "Error";
-      if (e is ApiError) msg = e.message;
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    final myId = await PrefHelper.getCurrentUserId();
+    if (myId != null) {
+      tasks = await PrefHelper.getTasksByTech(myId);
     }
-
     setState(() => isLoading = false);
+  }
+
+  // دالة رفض الطلب
+  Future<void> _declineTask(String taskId) async {
+    await PrefHelper.deleteTask(taskId);
+    fetchTasks(); // إعادة تحميل البيانات لتحديث الشاشة
+    ScaffoldMessenger.of(context)
+        .showSnackBar(customSnackBar("Request declined and removed"));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          CustomAppbar(),
-          Expanded(
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : tasks.isEmpty
-                    ? const Center(
-                        child: CustomText(
-                            text: 'No Works Available',
-                            fontsize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryBackgroundBlue))
-                    : ListView.builder(
-                        itemCount: tasks.length,
-                        itemBuilder: (context, index) {
-                          final item = tasks[index];
-
-                          return CustomContainer(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            CustomAppbar(onTap: () {}, text: "My Assignments"),
+            const SizedBox(height: 10),
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : tasks.isEmpty
+                      ? Center(
+                          // يظهر في نص الشاشة لو القائمة فاضية
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.assignment_late_outlined,
+                                  size: 80, color: Colors.grey.shade400),
+                              const SizedBox(height: 10),
+                              CustomText(
+                                text: 'No Work Requests Available',
+                                fontsize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade500,
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            final item = tasks[index];
+                            return CustomContainer(
                               name: item.userName,
-                              image: item.userImage,
                               description: item.description,
                               address: item.address,
+                              date: item.date,
+                              time: item.time,
                               onReply: () => Navigator.pushNamed(
-                                  context, AppRoute.chatScreen));
-                        },
-                      ),
-          ),
-        ],
+                                  context, AppRoute.chatScreen),
+                              onDecline: () =>
+                                  _declineTask(item.id), // تمرير دالة الحذف
+                            );
+                          },
+                        ),
+            ),
+          ],
+        ),
       ),
     );
   }

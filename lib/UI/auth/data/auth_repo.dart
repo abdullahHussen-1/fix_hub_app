@@ -1,20 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:fix_hub/UI/auth/data/user_model.dart';
+import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
 import 'package:fix_hub/core/network/api_error.dart';
 import 'package:fix_hub/core/network/api_exceptions.dart';
 import 'package:fix_hub/core/network/api_service.dart';
 import 'package:fix_hub/core/utils/pref_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepo {
   final ApiService apiService = ApiService();
 
-  //todo=> login
+  // ================== LOGIN ==================
   Future<UserModel> login(String phone, String password) async {
     try {
       final response = await apiService.post('/api/login', {
         'phone': phone,
         'password': password,
       });
+
       print("LOGIN RESPONSE => $response");
       if (response is ApiError) throw response;
 
@@ -31,13 +34,25 @@ class AuthRepo {
           ...data['user'],
           'token': data['token'],
         });
-        if (user.token != null) {
-          await PrefHelper.saveToken(user.token!);
+        if (user.role == 'technical') {
+          await PrefHelper.saveTechnician(
+            Technician(
+              id: user.id.toString(),
+              name: user.name ?? '',
+              phone: user.phone ?? '',
+              city: user.city ?? '',
+              specialty: user.profession ?? '',
+            ),
+          );
         }
+        // --- حفظ البيانات الأساسية محلياً ---
+        if (user.token != null) await PrefHelper.saveToken(user.token!);
+        if (user.role != null) await PrefHelper.saveRole(user.role!);
+        if (user.name != null) await PrefHelper.saveUserName(user.name!);
 
-        if (user.role != null) {
-          await PrefHelper.saveRole(user.role!);
-        }
+        // 👈 التعديل المهم: حفظ الـ ID لاستخدامه في ربط التاسكات
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', user.id.toString());
 
         return user;
       } else {
@@ -50,7 +65,7 @@ class AuthRepo {
     }
   }
 
-  // todo=> Register
+  // ================== REGISTER ==================
   Future<UserModel> register({
     required bool isTechnical,
     required String name,
@@ -82,8 +97,6 @@ class AuthRepo {
       }
 
       final response = await apiService.post(endpoint, body);
-
-      /// todo=> debug
       print("REGISTER RESPONSE => $response");
 
       if (response is ApiError) throw response;
@@ -98,19 +111,19 @@ class AuthRepo {
         }
 
         final userMap = Map<String, dynamic>.from(data['user']);
-
         final user = UserModel.fromJson({
           ...userMap,
           'token': data['token'],
         });
 
-        if (user.token != null) {
-          await PrefHelper.saveToken(user.token!);
-        }
+        // --- حفظ البيانات الأساسية محلياً ---
+        if (user.token != null) await PrefHelper.saveToken(user.token!);
+        if (user.role != null) await PrefHelper.saveRole(user.role!);
+        if (user.name != null) await PrefHelper.saveUserName(user.name!);
 
-        if (user.role != null) {
-          await PrefHelper.saveRole(user.role!);
-        }
+        // 👈 حفظ الـ ID عند التسجيل أيضاً لفلترة المهام لاحقاً
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', user.id.toString());
 
         return user;
       } else {
@@ -121,26 +134,24 @@ class AuthRepo {
     }
   }
 
-  // todo=> Logout clears token and role from shared preferences
+  // ================== LOGOUT ==================
   static Future<void> logout() async {
     try {
-      ///todo remove token + role from shared preferences
       await PrefHelper.clearAll();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_id'); // حذف الـ ID عند تسجيل الخروج لضمان الأمان
     } catch (e) {
       throw ApiError(message: e.toString());
     }
   }
 
-  //todo=> get profile
+  // ================== GET PROFILE ==================
   Future<UserModel> getProfile() async {
     try {
-      final endpoint = '/api/profile';
-
+      const endpoint = '/api/profile';
       final response = await apiService.get(endpoint);
 
-      /// todo=> debug
       print("PROFILE RESPONSE => $response");
-
       if (response is ApiError) throw response;
 
       if (response is Map<String, dynamic>) {
@@ -153,19 +164,19 @@ class AuthRepo {
         }
 
         final userMap = Map<String, dynamic>.from(data);
-
         final user = UserModel.fromJson({
           ...userMap,
           'token': data['token'],
         });
 
-        if (user.token != null) {
-          await PrefHelper.saveToken(user.token!);
-        }
+        if (user.token != null) await PrefHelper.saveToken(user.token!);
+        if (user.role != null) await PrefHelper.saveRole(user.role!);
+        if (user.name != null) await PrefHelper.saveUserName(user.name!);
 
-        if (user.role != null) {
-          await PrefHelper.saveRole(user.role!);
-        }
+        // 👈 تحديث الـ ID المخزن لضمان دقته
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', user.id.toString());
+
         return user;
       } else {
         throw ApiError(message: 'Unexpected response');
@@ -175,16 +186,13 @@ class AuthRepo {
     }
   }
 
-  //todo=> update profile
+  // ================== UPDATE PROFILE ==================
   Future<UserModel> updateProfile(Map<String, dynamic> body) async {
     try {
-      final endpoint = '/api/profile/update';
-
+      const endpoint = '/api/profile/update';
       final response = await apiService.put(endpoint, body);
 
-      /// todo=> debug
       print("UPDATE PROFILE RESPONSE => $response");
-
       if (response is ApiError) throw response;
 
       if (response is Map<String, dynamic>) {
@@ -195,9 +203,8 @@ class AuthRepo {
           throw ApiError(message: message ?? 'Update profile failed');
         }
 
-        /// todo=> refresh=> getProfile
+        // جلب البيانات الجديدة بعد التحديث لضمان تحديث الـ SharedPreferences تلقائياً
         final updatedUser = await getProfile();
-
         return updatedUser;
       } else {
         throw ApiError(message: 'Unexpected response');

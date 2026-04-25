@@ -1,8 +1,10 @@
 import 'package:fix_hub/UI/auth/data/auth_repo.dart';
+import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
 import 'package:fix_hub/core/network/api_error.dart';
+import 'package:fix_hub/core/utils/pref_helper.dart';
 import 'package:fix_hub/provider/provider_user_type.dart';
 import 'package:fix_hub/shared/custem_text_form_field.dart';
 import 'package:fix_hub/shared/custom_appBar.dart';
@@ -38,10 +40,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final List<String> cities = ['Sohag', 'Cairo', 'Alexandria', 'Aswan'];
 
   final List<String> specialties = [
-    'Electrical Technician',
+    'Electrician',
     'Plumber',
     'Carpenter',
-    'Painter'
+    'Painter',
+    'AC Technician',
+    'Cleaning',
   ];
 
   bool isLoading = false;
@@ -258,6 +262,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (user!.role == 'technical') {
+        await PrefHelper.saveTechnician(
+          Technician(
+            id: user.id.toString(), // 👈 مهم
+            name: nameController.text.trim(),
+            phone: numberController.text.trim(),
+            city: selectedCity ?? '',
+            specialty: selectedSpecialty ?? '',
+          ),
+        );
         Navigator.pushReplacementNamed(context, AppRoute.craftManRootScreen);
       } else {
         Navigator.pushReplacementNamed(context, AppRoute.customerRootScreen);

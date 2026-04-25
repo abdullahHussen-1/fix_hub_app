@@ -15,4 +15,5 @@ class AppRoute {
   static const String craftsMansDetailsScreen = "craftsMansDetiels";
   static const String addRequestScreen = "addRequest";
   static const String addReviewScreen = "addReview";
+  static const String aiChatScreen = "aiChatScreen";
 }
