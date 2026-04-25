@@ -9,6 +9,7 @@ class TaskModel {
   final String date;
   final String time;
   final String address;
+  final String userId;
 
   TaskModel({
     required this.id,
@@ -20,6 +21,7 @@ class TaskModel {
     required this.date,
     required this.time,
     required this.address,
+    required this.userId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,19 +34,20 @@ class TaskModel {
         "date": date,
         "time": time,
         "address": address,
+        "userId": userId
       };
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
-      id: json["id"],
-      technicianId: json["technicianId"],
-      userName: json["userName"] ?? '',
-      userImage: json["userImage"] ?? '',
-      typeOfService: json["typeOfService"] ?? '',
-      description: json["description"] ?? '',
-      date: json["date"] ?? '',
-      time: json["time"] ?? '',
-      address: json["address"] ?? '',
-    );
+        id: json["id"],
+        technicianId: json["technicianId"],
+        userName: json["userName"] ?? '',
+        userImage: json["userImage"] ?? '',
+        typeOfService: json["typeOfService"] ?? '',
+        description: json["description"] ?? '',
+        date: json["date"] ?? '',
+        time: json["time"] ?? '',
+        address: json["address"] ?? '',
+        userId: json["userId"]);
   }
 }

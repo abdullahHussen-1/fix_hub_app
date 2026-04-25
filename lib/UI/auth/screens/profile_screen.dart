@@ -6,6 +6,7 @@ import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_media_query.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
 import 'package:fix_hub/core/constants/app_style.dart';
+import 'package:fix_hub/core/network/chat_services.dart';
 import 'package:fix_hub/shared/custem_text_form_field.dart';
 import 'package:fix_hub/shared/custom_appBar.dart';
 import 'package:fix_hub/shared/custom_label_text.dart';
@@ -105,7 +106,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         addressController.text = user!.address ?? "null";
         roleController.text = user!.profession ?? "null";
       });
-
+      ChatService().updateUserDataInFirebase(
+          uid: updatedUser!.id.toString() ?? "null",
+          name: updatedUser.name ?? "null",
+          imageUrl: updatedUser.image ?? "null");
       ScaffoldMessenger.of(context).showSnackBar(
           customSnackBar("Your profile has been updated successfully"));
     } catch (e) {

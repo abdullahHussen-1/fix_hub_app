@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "508285471344",
+    "project_id": "chatfixhub",
+    "storage_bucket": "chatfixhub.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508285471344:android:f449bd2a11b021f5abc2b5",
+        "android_client_info": {
+          "package_name": "com.example.fix_hub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE5vycYeGWUviA6YX6yRH8FHQqEVfLPbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

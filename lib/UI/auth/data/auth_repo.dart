@@ -1,16 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:fix_hub/UI/auth/data/user_model.dart';
-import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
 import 'package:fix_hub/core/network/api_error.dart';
 import 'package:fix_hub/core/network/api_exceptions.dart';
 import 'package:fix_hub/core/network/api_service.dart';
 import 'package:fix_hub/core/utils/pref_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/network/chat_services.dart';
+import '../../home/data/models/craftsmans_model.dart';
+
 class AuthRepo {
   final ApiService apiService = ApiService();
 
-  // ================== LOGIN ==================
+  //todo=> login
   Future<UserModel> login(String phone, String password) async {
     try {
       final response = await apiService.post('/api/login', {
@@ -45,12 +47,23 @@ class AuthRepo {
             ),
           );
         }
-        // --- حفظ البيانات الأساسية محلياً ---
+        try {
+          await ChatService().saveUserToFirebase(
+            uid: user.id.toString(),
+            name: user.name ?? "User",
+            role: user.role ?? "normal",
+            imageUrl: user.image,
+          );
+        } catch (e) {
+          print("Firebase Login Sync Error: $e");
+        }
         if (user.token != null) await PrefHelper.saveToken(user.token!);
         if (user.role != null) await PrefHelper.saveRole(user.role!);
         if (user.name != null) await PrefHelper.saveUserName(user.name!);
+        if (user.id != null) {
+          await PrefHelper.saveUserId(user.id.toString());
+        }
 
-        // 👈 التعديل المهم: حفظ الـ ID لاستخدامه في ربط التاسكات
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('user_id', user.id.toString());
 
@@ -65,7 +78,7 @@ class AuthRepo {
     }
   }
 
-  // ================== REGISTER ==================
+  // todo=> Register
   Future<UserModel> register({
     required bool isTechnical,
     required String name,
@@ -97,6 +110,8 @@ class AuthRepo {
       }
 
       final response = await apiService.post(endpoint, body);
+
+      /// todo=> debug
       print("REGISTER RESPONSE => $response");
 
       if (response is ApiError) throw response;
@@ -111,20 +126,36 @@ class AuthRepo {
         }
 
         final userMap = Map<String, dynamic>.from(data['user']);
+
         final user = UserModel.fromJson({
           ...userMap,
           'token': data['token'],
         });
+        try {
+          await ChatService().saveUserToFirebase(
+            uid: user.id.toString(),
+            // تأكد إن الـ ID موجود في الـ UserModel
+            name: user.name ?? name,
+            role: user.role ?? "null",
+            imageUrl: user.image,
+            // تأكد إن الـ UserModel فيه حقل للصورة
+            email: "null", // اختياري
+          );
+        } catch (e) {
+          print("Firebase Sync Error: $e");
+          // مش بنعمل throw هنا عشان لو الفايربيز فشل لسبب ما، اليوزر يكمل دخول عادي
+        }
 
-        // --- حفظ البيانات الأساسية محلياً ---
-        if (user.token != null) await PrefHelper.saveToken(user.token!);
-        if (user.role != null) await PrefHelper.saveRole(user.role!);
-        if (user.name != null) await PrefHelper.saveUserName(user.name!);
+        if (user.token != null) {
+          await PrefHelper.saveToken(user.token!);
+        }
 
-        // 👈 حفظ الـ ID عند التسجيل أيضاً لفلترة المهام لاحقاً
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user_id', user.id.toString());
-
+        if (user.role != null) {
+          await PrefHelper.saveRole(user.role!);
+        }
+        if (user.id != null) {
+          await PrefHelper.saveUserId(user.id.toString());
+        }
         return user;
       } else {
         throw ApiError(message: 'Unexpected response');
@@ -134,24 +165,26 @@ class AuthRepo {
     }
   }
 
-  // ================== LOGOUT ==================
+  // todo=> Logout clears token and role from shared preferences
   static Future<void> logout() async {
     try {
+      ///todo remove token + role from shared preferences
       await PrefHelper.clearAll();
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('user_id'); // حذف الـ ID عند تسجيل الخروج لضمان الأمان
     } catch (e) {
       throw ApiError(message: e.toString());
     }
   }
 
-  // ================== GET PROFILE ==================
+  //todo=> get profile
   Future<UserModel> getProfile() async {
     try {
-      const endpoint = '/api/profile';
+      final endpoint = '/api/profile';
+
       final response = await apiService.get(endpoint);
 
+      /// todo=> debug
       print("PROFILE RESPONSE => $response");
+
       if (response is ApiError) throw response;
 
       if (response is Map<String, dynamic>) {
@@ -164,19 +197,19 @@ class AuthRepo {
         }
 
         final userMap = Map<String, dynamic>.from(data);
+
         final user = UserModel.fromJson({
           ...userMap,
           'token': data['token'],
         });
 
-        if (user.token != null) await PrefHelper.saveToken(user.token!);
-        if (user.role != null) await PrefHelper.saveRole(user.role!);
-        if (user.name != null) await PrefHelper.saveUserName(user.name!);
+        if (user.token != null) {
+          await PrefHelper.saveToken(user.token!);
+        }
 
-        // 👈 تحديث الـ ID المخزن لضمان دقته
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user_id', user.id.toString());
-
+        if (user.role != null) {
+          await PrefHelper.saveRole(user.role!);
+        }
         return user;
       } else {
         throw ApiError(message: 'Unexpected response');
@@ -186,13 +219,16 @@ class AuthRepo {
     }
   }
 
-  // ================== UPDATE PROFILE ==================
+  //todo=> update profile
   Future<UserModel> updateProfile(Map<String, dynamic> body) async {
     try {
-      const endpoint = '/api/profile/update';
+      final endpoint = '/api/profile/update';
+
       final response = await apiService.put(endpoint, body);
 
+      /// todo=> debug
       print("UPDATE PROFILE RESPONSE => $response");
+
       if (response is ApiError) throw response;
 
       if (response is Map<String, dynamic>) {
@@ -203,8 +239,9 @@ class AuthRepo {
           throw ApiError(message: message ?? 'Update profile failed');
         }
 
-        // جلب البيانات الجديدة بعد التحديث لضمان تحديث الـ SharedPreferences تلقائياً
+        /// todo=> refresh=> getProfile
         final updatedUser = await getProfile();
+
         return updatedUser;
       } else {
         throw ApiError(message: 'Unexpected response');

@@ -1,9 +1,12 @@
+import 'package:fix_hub/UI/chat/chat_test.dart';
 import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
 import 'package:fix_hub/core/constants/app_route.dart';
+import 'package:fix_hub/core/utils/pref_helper.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactButtons extends StatelessWidget {
   final Technician tech;
@@ -28,8 +31,15 @@ class ContactButtons extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: IconButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // تقدر تربطها بشات بعدين
+                        String myId = await PrefHelper.getUserId();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreenTest(
+                                  receiverId: tech.id, myId: myId),
+                            ));
                       },
                       icon: Icon(Icons.chat_bubble_outline,
                           color: AppColors.primaryBackgroundBlue),
@@ -45,12 +55,12 @@ class ContactButtons extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: IconButton(
-                      onPressed: () {
+                      onPressed: () async {
                         /// مؤقت: اطبع الرقم
                         print("Call: ${tech.phone}");
-
-                        /// لو عايز بعدين:
-                        /// launch("tel:${tech.phone}");
+                        if (tech.phone.isNotEmpty) {
+                          await _makePhoneCall(tech.phone);
+                        }
                       },
                       icon: Icon(Icons.call,
                           color: AppColors.primaryBackgroundBlue),
@@ -65,7 +75,7 @@ class ContactButtons extends StatelessWidget {
                   Navigator.pushNamed(
                     context,
                     AppRoute.addRequestScreen,
-                    arguments: tech, // 👈 مهم
+                    arguments: tech,
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -85,10 +95,7 @@ class ContactButtons extends StatelessWidget {
               ),
             ],
           ),
-
           const Gap(12),
-
-          /// ⭐ Add Review
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -96,11 +103,10 @@ class ContactButtons extends StatelessWidget {
                 final result = await Navigator.pushNamed(
                   context,
                   AppRoute.addReviewScreen,
-                  arguments: tech, // 👈 مهم
+                  arguments: tech,
                 );
 
                 if (result == true) {
-                  // 👈 عشان نعمل refresh
                   (context as Element).markNeedsBuild();
                 }
               },
@@ -122,5 +128,22 @@ class ContactButtons extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final String cleanNumber =
+        phoneNumber.replaceAll(RegExp(r'\s+\b|\b\s'), '');
+
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: cleanNumber,
+    );
+
+    try {
+      await launchUrl(launchUri,
+          mode: LaunchMode.externalNonBrowserApplication);
+    } catch (e) {
+      debugPrint('حدث خطأ أثناء محاولة الاتصال: $e');
+    }
   }
 }

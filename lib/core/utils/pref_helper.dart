@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'package:fix_hub/UI/tasks/data/task_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:fix_hub/UI/addReview/data/reviewModel.dart';
 import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
+import 'package:fix_hub/UI/tasks/data/task_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefHelper {
   static const String _tokenKey = 'auth_token';
@@ -10,6 +11,7 @@ class PrefHelper {
   static const String _userNameKey = 'user_name';
   static const String _techKey = 'technicians';
   static const String _reviewsKey = "reviews";
+  static const String _userIdKey = 'user_id';
 
   // ================== AUTH & USER ==================
 
@@ -49,6 +51,17 @@ class PrefHelper {
     //await prefs.clear(); // حذف كل البيانات عند تسجيل الخروج
     await prefs.remove(_tokenKey);
     await prefs.remove(_roleKey);
+  }
+
+  static Future<void> saveUserId(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userIdKey, userId);
+    print("User ID saved to local storage: $userId");
+  }
+
+  static Future<String> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userIdKey) ?? '';
   }
 
   // ================== TECHNICIANS ==================
@@ -103,6 +116,7 @@ class PrefHelper {
     final all = await getReviews();
     return all.where((r) => r.technicianId == techId).toList();
   }
+
   static const String _tasksKey = "user_requests";
 
   static Future<void> saveTask(TaskModel task) async {
@@ -127,6 +141,7 @@ class PrefHelper {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('user_id');
   }
+
   // أضف هذا الكود داخل كلاس PrefHelper
   static Future<void> deleteTask(String taskId) async {
     final prefs = await SharedPreferences.getInstance();

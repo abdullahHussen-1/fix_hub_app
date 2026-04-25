@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "chatfixhub",
+          "appId": "1:508285471344:android:f449bd2a11b021f5abc2b5",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "chatfixhub",
+          "configurations": {
+            "android": "1:508285471344:android:f449bd2a11b021f5abc2b5",
+            "ios": "1:508285471344:ios:868414dff2e00ec7abc2b5",
+            "macos": "1:508285471344:ios:868414dff2e00ec7abc2b5",
+            "web": "1:508285471344:web:d0a29e81e167c727abc2b5",
+            "windows": "1:508285471344:web:4da7a489100f2738abc2b5"
+          }
+        }
+      }
+    }
+  }
+}

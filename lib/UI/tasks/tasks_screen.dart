@@ -1,10 +1,11 @@
 // lib/UI/tasks/tasks_screen.dart
-import 'package:fix_hub/core/constants/app_route.dart';
 import 'package:fix_hub/core/utils/pref_helper.dart';
 import 'package:fix_hub/shared/custom_snackBar.dart';
 import 'package:fix_hub/shared/custom_text.dart';
 import 'package:flutter/material.dart';
+
 import '../../shared/custom_appBar.dart';
+import '../chat/chat_test.dart';
 import 'data/task_model.dart';
 import 'widgets/custom_task_widget.dart';
 
@@ -85,8 +86,19 @@ class _TasksScreenState extends State<TasksScreen> {
                               address: item.address,
                               date: item.date,
                               time: item.time,
-                              onReply: () => Navigator.pushNamed(
-                                  context, AppRoute.chatScreen),
+                              onReply: () async {
+                                String? myId =
+                                    await PrefHelper.getCurrentUserId();
+                                String? receiverId = item.userId;
+
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatScreenTest(
+                                          receiverId: receiverId,
+                                          myId: myId ?? "null"),
+                                    ));
+                              },
                               onDecline: () =>
                                   _declineTask(item.id), // تمرير دالة الحذف
                             );

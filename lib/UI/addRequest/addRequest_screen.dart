@@ -1,17 +1,18 @@
 import 'package:fix_hub/UI/home/data/models/craftsmans_model.dart';
 import 'package:fix_hub/UI/tasks/data/task_model.dart';
-import 'package:fix_hub/core/utils/pref_helper.dart';
-import 'package:fix_hub/shared/custom_snackBar.dart';
-import 'package:flutter/material.dart';
 import 'package:fix_hub/core/constants/app_colors.dart';
+import 'package:fix_hub/core/utils/pref_helper.dart';
 import 'package:fix_hub/shared/custem_text_form_field.dart';
 import 'package:fix_hub/shared/custom_appBar.dart';
 import 'package:fix_hub/shared/custom_label_text.dart';
+import 'package:fix_hub/shared/custom_snackBar.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart'; // تأكد من إضافة intl في pubspec.yaml
 
 class AddrequestScreen extends StatefulWidget {
   const AddrequestScreen({super.key});
+
   @override
   State<AddrequestScreen> createState() => _AddrequestScreenState();
 }
@@ -73,21 +74,21 @@ class _AddrequestScreenState extends State<AddrequestScreen> {
                           customSnackBar("Please fill all fields"));
                       return;
                     }
-
+                    final userId = await PrefHelper.getCurrentUserId();
                     final task = TaskModel(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      technicianId: tech.id,
-                      userName: await PrefHelper.getUserName() ?? "Client",
-                      userImage: "",
-                      typeOfService: tech.specialty,
-                      description: problemDescriptionController.text,
-                      date: dateController.text,
-                      time: timeController.text,
-                      address: addressController.text,
-                    );
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        technicianId: tech.id,
+                        userName: await PrefHelper.getUserName() ?? "Client",
+                        userImage: "",
+                        typeOfService: tech.specialty,
+                        description: problemDescriptionController.text,
+                        date: dateController.text,
+                        time: timeController.text,
+                        address: addressController.text,
+                        userId: userId ?? "null");
 
                     await PrefHelper.saveTask(task);
-
+                    print(userId ?? "null");
                     // إظهار الرسالة بنجاح
                     ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
                         "Request sent to ${tech.name} successfully!"));

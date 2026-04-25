@@ -260,11 +260,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: passwordController.text,
         confirmPassword: confirmPasswordController.text,
       );
-
       if (user!.role == 'technical') {
         await PrefHelper.saveTechnician(
           Technician(
-            id: user.id.toString(), // 👈 مهم
+            id: user.id.toString(),
+            // 👈 مهم
             name: nameController.text.trim(),
             phone: numberController.text.trim(),
             city: selectedCity ?? '',
