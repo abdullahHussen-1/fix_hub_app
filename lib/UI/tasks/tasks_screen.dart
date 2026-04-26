@@ -1,4 +1,5 @@
 // lib/UI/tasks/tasks_screen.dart
+import 'package:fix_hub/core/network/chat_services.dart';
 import 'package:fix_hub/core/utils/pref_helper.dart';
 import 'package:fix_hub/shared/custom_snackBar.dart';
 import 'package:fix_hub/shared/custom_text.dart';
@@ -60,7 +61,6 @@ class _TasksScreenState extends State<TasksScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : tasks.isEmpty
                       ? Center(
-                          // يظهر في نص الشاشة لو القائمة فاضية
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -81,27 +81,49 @@ class _TasksScreenState extends State<TasksScreen> {
                           itemBuilder: (context, index) {
                             final item = tasks[index];
                             return CustomContainer(
-                              name: item.userName,
-                              description: item.description,
-                              address: item.address,
-                              date: item.date,
-                              time: item.time,
-                              onReply: () async {
-                                String? myId =
-                                    await PrefHelper.getCurrentUserId();
-                                String? receiverId = item.userId;
+                                name: item.userName,
+                                description: item.description,
+                                address: item.address,
+                                date: item.date,
+                                time: item.time,
+                                onReply: () async {
+                                  String? myId =
+                                      await PrefHelper.getCurrentUserId();
+                                  String? receiverId = item.userId;
+                                  ChatService().sendMessage(
+                                      senderId: myId ?? "null",
+                                      receiverId: receiverId,
+                                      message:
+                                          "Your request has been accepted");
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatScreenTest(
-                                          receiverId: receiverId,
-                                          myId: myId ?? "null"),
-                                    ));
-                              },
-                              onDecline: () =>
-                                  _declineTask(item.id), // تمرير دالة الحذف
-                            );
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatScreenTest(
+                                            receiverId: receiverId,
+                                            myId: myId ?? "null"),
+                                      ));
+                                  _declineTask(item.id);
+                                },
+                                onDecline: () async {
+                                  String? myId =
+                                      await PrefHelper.getCurrentUserId();
+                                  String? receiverId = item.userId;
+                                  ChatService().sendMessage(
+                                      senderId: myId ?? "null",
+                                      receiverId: receiverId,
+                                      message:
+                                          "Your request has been rejected");
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatScreenTest(
+                                            receiverId: receiverId,
+                                            myId: myId ?? "null"),
+                                      ));
+                                  _declineTask(item.id);
+                                });
                           },
                         ),
             ),

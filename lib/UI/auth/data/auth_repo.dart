@@ -156,6 +156,10 @@ class AuthRepo {
         if (user.id != null) {
           await PrefHelper.saveUserId(user.id.toString());
         }
+        if (user.name != null) await PrefHelper.saveUserName(user.name!);
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', user.id.toString());
         return user;
       } else {
         throw ApiError(message: 'Unexpected response');
